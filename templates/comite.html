@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block titre %}{{ 'Nouvel adhérent' if creation else comite.nom }}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{{ 'Nouvel adhérent' if creation else comite.nom }}{% if comite %} <span class="id">{{ comite.id }}</span>{% endif %}</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.liste') }}">Retour</a></div>
+</div>
+{% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+{% if comite %}
+  <p class="sous-titre">Catégorie {{ comite._categorie or '?' }} ({{ categories.get(comite._categorie, 'à préciser') }}) ·
+     <strong>{{ comite._voix }} voix</strong> · {{ 'à jour de cotisation' if comite._a_jour else 'cotisation en attente' }}</p>
+{% endif %}
+<form method="post" class="carte formulaire">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+  <fieldset {{ 'disabled' if not peut_gerer }}>
+  <h2>Organisme</h2>
+  <div class="champs">
+    <label>Nom de l'organisme <input type="text" name="nom" value="{{ valeurs.nom }}" required></label>
+    <label>Fédération CNOSF
+      <select name="federation">
+        <option value="">— aucune (catégorie saisie à la main) —</option>
+        {% for numero, libelle in categories.items() %}
+          <optgroup label="{{ numero }} – {{ libelle }}">
+          {% for f in federations if f.categorie | int == numero %}
+            <option value="{{ f.discipline }}" {{ 'selected' if valeurs.federation == f.discipline }}>{{ f.discipline }}</option>
+          {% endfor %}
+          </optgroup>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Catégorie (si aucune fédération)
+      <select name="categorie"><option value="">—</option>
+        {% for numero, libelle in categories.items() %}<option value="{{ numero }}" {{ 'selected' if valeurs.categorie | string == numero | string }}>{{ numero }} – {{ libelle }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+  <div class="champs">
+    <label>Nombre de licences <input type="text" inputmode="numeric" name="licencies" value="{{ valeurs.licencies }}"></label>
+    <label>Nombre de clubs <input type="text" inputmode="numeric" name="clubs" value="{{ valeurs.clubs }}"></label>
+    <label>Nombre de féminines <input type="text" inputmode="numeric" name="feminines" value="{{ valeurs.feminines }}"></label>
+  </div>
+  <h2>Cotisation</h2>
+  <div class="champs">
+    <label>Mode de règlement
+      <select name="mode_reglement"><option value="">— en attente de paiement —</option>
+        {% for m in modes %}<option {{ 'selected' if valeurs.mode_reglement == m }}>{{ m }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Montant (€) <input type="text" inputmode="numeric" name="montant" value="{{ valeurs.montant }}" placeholder="vide = montant de la cotisation"></label>
+    <label>Date de règlement <input type="date" name="date_reglement" value="{{ valeurs.date_reglement }}"></label>
+  </div>
+  <h2>Contacts</h2>
+  <div class="champs">
+    <label>Président (nom prénom) <input type="text" name="president" value="{{ valeurs.president }}"></label>
+    <label>Mail du président <input type="email" name="mail_president" value="{{ valeurs.mail_president }}"></label>
+    <label>Élu référent du CDOS <input type="text" name="elu_referent" value="{{ valeurs.elu_referent }}"></label>
+  </div>
+  <label class="case"><input type="checkbox" name="actif" value="oui" {{ 'checked' if valeurs.actif == 'oui' }}> Membre actif (décocher pour le retirer du calcul des voix)</label>
+  </fieldset>
+  {% if peut_gerer %}<button type="submit">{{ 'Ajouter' if creation else 'Enregistrer' }}</button>{% endif %}
+</form>
+{% if historique %}
+<section class="carte">
+  <h2>Historique</h2>
+  <table class="compact">
+    <thead><tr><th>Quand</th><th>Qui</th><th>Champ</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr></thead>
+    <tbody>{% for h in historique %}<tr><td>{{ h.horodatage }}</td><td>{{ h.utilisateur }}</td><td>{{ h.champ }}</td><td>{{ h.ancienne }}</td><td>{{ h.nouvelle }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

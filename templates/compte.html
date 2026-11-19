@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titre %}{{ 'Nouveau compte' if creation else 'Compte' }}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{{ 'Nouveau compte' if creation else 'Compte de ' ~ valeurs.nom }}</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('comptes.liste') }}">Retour</a></div>
+</div>
+{% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+<form method="post" class="carte formulaire">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+  <div class="champs">
+    <label>Identifiant de connexion <input type="text" name="identifiant" value="{{ valeurs.identifiant }}" required autocomplete="off" autocapitalize="none"></label>
+    <label>Nom <input type="text" name="nom" value="{{ valeurs.nom }}" required></label>
+    <label>Alias dans le rétroplanning <input type="text" name="alias" value="{{ valeurs.alias }}" placeholder="ex. Pierre (vide = prénom)"></label>
+    <label>Courriel (facultatif) <input type="email" name="courriel" value="{{ valeurs.courriel }}"></label>
+  </div>
+  <fieldset>
+    <legend>Rôles</legend>
+    {% for cle, libelle in roles.items() %}
+      <label class="case"><input type="checkbox" name="roles" value="{{ cle }}" {{ 'checked' if cle in valeurs.roles }}> {{ libelle }}</label>
+    {% endfor %}
+  </fieldset>
+  <div class="champs">
+    <label>Pôle (rôle Contribution)
+      <select name="pole"><option value="">—</option>
+        {% for p in poles %}<option {{ 'selected' if valeurs.pole == p }}>{{ p }}</option>{% endfor %}</select>
+    </label>
+    <label>{{ 'Mot de passe initial' if creation else 'Nouveau mot de passe (vide = inchangé)' }}
+      <input type="text" name="mot_de_passe" value="" {{ 'required' if creation }} minlength="8" autocomplete="off">
+    </label>
+    <label class="case"><input type="checkbox" name="actif" value="oui" {{ 'checked' if valeurs.actif | booleen }}> Compte actif</label>
+  </div>
+  <p class="discret">Le mot de passe initial devra être changé à la première connexion.</p>
+  <button type="submit">{{ 'Créer le compte' if creation else 'Enregistrer' }}</button>
+</form>
+{% endblock %}

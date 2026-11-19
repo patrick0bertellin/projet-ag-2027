@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block titre %}Paramètres{% endblock %}
+{% macro erreurs_section(nom) %}
+  {% if erreurs and section == nom %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+{% endmacro %}
+{% block contenu %}
+<h1>Paramètres</h1>
+
+<section class="carte" id="projet">
+  <h2>Projet</h2>
+  {{ erreurs_section('projet') }}
+  <form method="post" action="{{ url_for('parametres.projet') }}" class="formulaire">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <div class="champs">
+    {% for cle, (libelle, defaut) in champs.items() %}
+      <label>{{ libelle }}
+        {% if cle in ('date_ag', 'date_ca') %}
+          <input type="date" name="{{ cle }}" value="{{ projet[cle] }}">
+        {% elif cle in numeriques %}
+          <input type="number" min="0" name="{{ cle }}" value="{{ projet[cle] }}">
+        {% else %}
+          <input type="text" name="{{ cle }}" value="{{ projet[cle] }}">
+        {% endif %}
+      </label>
+    {% endfor %}
+    </div>
+    <button type="submit">Enregistrer le projet</button>
+  </form>
+  <h3>Butoirs calculés</h3>
+  <table class="compact">
+    <thead><tr><th>Butoir</th><th>Date</th></tr></thead>
+    <tbody>{% for b in butoirs %}<tr class="{{ 'ag' if b.cle == 'ag' }}"><td>{{ b.libelle }}</td><td>{{ b.date | date_fr }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+
+<section class="carte" id="listes">
+  <h2>Listes</h2>
+  <p class="discret">Une valeur par ligne. Les statuts des tâches sont fixes (les calculs en dépendent).</p>
+  {{ erreurs_section('listes') }}
+  <form method="post" action="{{ url_for('parametres.listes') }}" class="formulaire">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <div class="champs listes">
+    {% for nom, libelle in libelles_listes.items() %}
+      <label>{{ libelle }}
+        <textarea name="{{ nom }}" rows="8" {{ 'readonly' if nom == 'statuts' }}>{{ listes_texte[nom] }}</textarea>
+      </label>
+    {% endfor %}
+    </div>
+    <button type="submit">Enregistrer les listes</button>
+  </form>
+</section>
+
+<section class="carte" id="bareme">
+  <h2>Barème des voix</h2>
+  <p class="discret">Bonus selon les licenciés : chaque ligne « licenciés à partir de ; voix en plus ». Barème actuel : +1 de 1 à 2 000, +2 de 2 001 à 10 000, +3 au-delà.</p>
+  {{ erreurs_section('bareme') }}
+  <form method="post" action="{{ url_for('parametres.bareme') }}" class="formulaire">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <div class="champs">
+      <label>Voix de base <input type="number" min="0" name="voix_base" value="{{ bareme.voix_base }}"></label>
+      <label>Bonus catégorie 1 <input type="number" min="0" name="voix_bonus_categorie_1" value="{{ bareme.voix_bonus_categorie_1 }}"></label>
+      <label>Seuils (licenciés à partir de ; voix en plus)
+        <textarea name="seuils" rows="4">{{ bareme.seuils }}</textarea></label>
+    </div>
+    <button type="submit">Enregistrer le barème</button>
+  </form>
+</section>
+
+<section class="carte" id="import">
+  <h2>Import des données de la v05</h2>
+  <p>Recharge <code>donnees/projet_ag_2027.json</code> dans le Google Sheet : tâches, calendrier de communication,
+     questions à trancher, documents, règles statutaires, ordre du jour, points de vigilance.</p>
+  {% if onglets_absents %}<p class="discret">Les onglets absents seront créés : {{ onglets_absents | join(', ') }}.</p>{% endif %}
+  {{ erreurs_section('import') }}
+  <form method="post" action="{{ url_for('parametres.import_json') }}" class="formulaire">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <label class="case"><input type="checkbox" name="conserver_suivi" value="1" checked>
+      Conserver le suivi déjà saisi (statut, avancement, commentaire des tâches ; calendrier, questions et documents existants)</label>
+    <label class="case"><input type="checkbox" name="reinitialiser_parametres" value="1">
+      Réinitialiser aussi le projet et les listes (date de l'AG, délais, phases, pôles…)</label>
+    <label class="case"><input type="checkbox" name="confirmation" value="oui"> Je confirme l'import</label>
+    <button type="submit">Importer</button>
+  </form>
+</section>
+{% endblock %}

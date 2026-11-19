@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titre %}Importer les adhérents{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>Importer le fichier Excel des adhérents</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.liste') }}">Retour</a></div>
+</div>
+{% with avant_import = true %}{% include "_alerte_synchro.html" %}{% endwith %}
+{% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+<section class="carte">
+  <ol>
+    <li>Choisir le classeur <code>.xlsx</code> (onglets <strong>Adhésion</strong>, <strong>Voix</strong>, <strong>Coordonnées</strong> ; l'onglet tec est ignoré).</li>
+    <li>L'application rapproche les onglets par le <strong>nom de l'organisme</strong>, jamais par numéro de ligne, puis le compare aux comités déjà enregistrés.</li>
+    <li>Un <strong>aperçu</strong> montre les nouveaux, les modifications champ par champ, les absents (qui seront désactivés) et les anomalies. <strong>Rien n'est écrit</strong> avant votre validation.</li>
+  </ol>
+  <p class="discret">Après l'application, si la case est cochée dans l'aperçu, la mise en forme du fichier (couleurs, polices,
+    filtres, mise en page, propriétés) devient celle des prochains exports ; aucune donnée du fichier n'est gardée dans ce modèle.</p>
+  <p class="discret">Ne sont jamais modifiés par un import : la fédération CNOSF déjà choisie, l'inscription, le représentant, le mandat, la présence et la date de règlement.</p>
+  <form method="post" enctype="multipart/form-data" class="formulaire">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <label>Fichier Excel <input type="file" name="fichier" accept=".xlsx" required></label>
+    <button type="submit">Lire le fichier et afficher l'aperçu</button>
+  </form>
+</section>
+{% endblock %}

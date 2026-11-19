@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block titre %}Adhérents{% endblock %}
+{# visiteur : consultation sans contacts ni fiche ; suivi (sondage, présence) : Chef de projet seulement #}
+{% macro ligne_comite(c) %}
+  <tr class="{{ '' if c._a_jour else 'en-attente' }}{{ ' depliable' if visiteur }}"{% if visiteur %} data-details="details-{{ c.id }}" title="Cliquer pour afficher les contacts"{% endif %}>
+    <td>{% if visiteur %}<span class="fleche">▸</span> {{ c.nom }}{% else %}<a href="{{ url_for('adherents.fiche', identifiant=c.id) }}">{{ c.nom }}</a> <span class="id">{{ c.id }}</span>{% endif %}</td>
+    <td>{{ c.federation or '—' }}</td>
+    <td class="centre" title="{{ categories.get(c._categorie, '') }}">{{ c._categorie or '?' }}</td>
+    <td class="montant">{{ "{:,}".format(c.licencies | int).replace(",", " ") if c.licencies else '—' }}</td>
+    <td class="centre"><strong>{{ c._voix }}</strong></td>
+    <td class="centre">{% if c._a_jour %}<span class="statut s-fait">{{ 'à jour' if visiteur else c.mode_reglement }}</span>{% else %}<span class="statut s-bloqué">en attente</span>{% endif %}</td>
+    {% if not visiteur %}
+    <td>{{ c.president }}{% if c.mail_president %}<br><a class="discret" href="mailto:{{ c.mail_president }}">{{ c.mail_president }}</a>{% endif %}</td>
+    <td>{{ c.elu_referent }}</td>
+    {% endif %}
+    {% if suivi %}<td class="centre">{{ 'oui' if c._inscrit else '—' }}</td>{% endif %}
+  </tr>
+  {% if visiteur %}
+  <tr class="details-contacts" id="details-{{ c.id }}" hidden>
+    <td colspan="6">
+      <strong>Président :</strong> {{ c.president or '—' }}
+      {% if c.mail_president %} · <a href="mailto:{{ c.mail_president }}">{{ c.mail_president }}</a>{% endif %}
+      · <strong>Élu référent du CDOS :</strong> {{ c.elu_referent or '—' }}
+    </td>
+  </tr>
+  {% endif %}
+{% endmacro %}
+{% macro entetes() %}
+  <thead><tr><th>Organisme</th><th>Fédération CNOSF</th><th>Cat.</th><th>Licences</th><th>Voix</th><th>Cotisation</th>
+    {% if not visiteur %}<th>Président</th><th>Élu référent</th>{% endif %}{% if suivi %}<th>Inscrit</th>{% endif %}</tr></thead>
+{% endmacro %}
+{% block contenu %}
+{% set nb_colonnes = 6 + (0 if visiteur else 2) + (1 if suivi else 0) %}
+<div class="entete-page">
+  <h1>Adhérents</h1>
+  {% if not visiteur %}
+  <div class="actions">
+    <a class="bouton secondaire" href="{{ url_for('adherents.export') }}">Exporter l'Excel</a>
+    {% if peut_gerer %}
+      <a class="bouton secondaire" href="{{ url_for('adherents.importer') }}">Importer un Excel</a>
+      <a class="bouton" href="{{ url_for('adherents.nouveau') }}">Ajouter un adhérent</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+{% if peut_gerer %}{% include "_alerte_synchro.html" %}{% endif %}
+
+{% if visiteur %}
+<details class="carte processus" open>
+  <summary><strong>Comprendre cette page</strong></summary>
+  <p>Vous consultez la liste des <strong>comités sportifs départementaux membres du CDOS 78</strong> et le calcul des voix
+     pour l'Assemblée générale. Cette page est en <strong>consultation seule</strong> : elle est tenue à jour par le Chef de projet
+     et le responsable Budget.</p>
+  <ul>
+    <li><strong>Voix</strong> : chaque comité a {{ bareme.voix_base }} voix de base, plus un bonus selon son nombre de licenciés,
+      plus {{ bareme.voix_bonus_categorie_1 }} voix si sa fédération est olympique (catégorie 1 du CNOSF).</li>
+    <li><strong>Qui vote ?</strong> Seuls les comités <strong>à jour de leur cotisation à la date de l'AG</strong> ; un comité
+      « en attente » peut régulariser à l'accueil le jour même. Ni procuration ni vote par correspondance.</li>
+    <li><strong>Quorum de participation</strong> : la moitié au moins du total des voix doit être présente.</li>
+    <li><strong>Majorité d'approbation</strong> : {{ fraction }} des voix exprimées ; le petit calculateur ci-dessous donne le
+      nombre de voix « pour » nécessaires.</li>
+  </ul>
+</details>
+{% else %}
+<details class="carte processus">
+  <summary><strong>Mode d'emploi : tenir la liste des adhérents à jour</strong></summary>
+  <p>Le <strong>fichier Excel des adhérents</strong> (onglets Adhésion, Voix, Coordonnées et tec) reste le fichier de référence.
+     L'application en garde une copie, calcule les voix et le quorum, et sait refaire le fichier à l'identique.</p>
+  <ol>
+    <li><strong>Mettre à jour un comité dans l'application</strong> : <strong>cliquer sur le nom de l'organisme</strong> dans le tableau
+      ci-dessous ; sa fiche s'ouvre. Modifier le nombre de licences, le mode de règlement (dès qu'il est renseigné, le comité est
+      « à jour » et ses voix comptent), le montant, le président, son mail, l'élu référent ou la fédération CNOSF, puis
+      <em>Enregistrer</em>. Chaque modification est tracée (historique en bas de la fiche).
+      {% if peut_gerer %}<br>Nouveau membre : bouton <em>Ajouter un adhérent</em>. Membre qui quitte le CDOS : décocher
+      « Membre actif » dans sa fiche (il est retiré du calcul des voix, son historique est conservé).{% endif %}</li>
+    <li><strong>Ou mettre à jour le fichier Excel puis l'importer</strong>{% if not peut_gerer %} (Chef de projet et Budget){% endif %} :
+      <em>Importer un Excel</em> → l'application rapproche les organismes <strong>par leur nom</strong> et affiche un aperçu
+      (nouveaux, modifications champ par champ, absents à désactiver, anomalies) ; <strong>rien n'est écrit</strong> avant
+      <em>Appliquer les opérations cochées</em>. La mise en forme du fichier importé peut devenir celle des prochains exports.</li>
+    <li><strong>Exporter l'Excel</strong> après chaque série de modifications : le fichier produit garde la mise en forme du fichier
+      d'origine (filtres automatiques, couleurs, polices, mise en page et impression, propriétés « Synthèse ») avec les données
+      de l'application et des formules corrigées (bornes du barème, arrondi supérieur des quorums, comités à jour seuls).
+      Tant qu'un comité modifié dans l'application n'a pas été exporté, une <strong>alerte</strong> l'indique en haut de cette page
+      et sur la page d'import.</li>
+    {% if suivi %}
+    <li><strong>Sondage et présence</strong> (Chef de projet) : importer le fichier des réponses au sondage de participation,
+      rattacher à la main les réponses non reconnues, puis le jour de l'AG cocher les comités présents à l'émargement.</li>
+    {% endif %}
+  </ol>
+</details>
+{% endif %}
+
+{% if not nb_federations and not visiteur %}
+  <div class="alerte attention">Le référentiel CNOSF est vide : les catégories ne peuvent pas être déduites des fédérations.
+    <a href="{{ url_for('adherents.referentiel') }}">Charger le référentiel</a>.</div>
+{% endif %}
+
+<div class="tuiles">
+  <div class="tuile">
+    <div class="tuile-titre">Total des voix</div>
+    <div class="tuile-valeur">{{ resume.total_voix }}</div>
+    <div class="tuile-detail">{{ resume.nb_a_jour }} comités à jour sur {{ resume.nb_comites }}
+      {% if resume.nb_en_attente %}<br>{{ resume.nb_en_attente }} en attente de paiement ({{ resume.voix_en_attente }} voix){% endif %}</div>
+  </div>
+  <div class="tuile">
+    <div class="tuile-titre">Quorum de participation</div>
+    <div class="tuile-valeur">{{ resume.seuil }}</div>
+    <div class="tuile-detail">la moitié au moins des voix, constatée sur les voix présentes</div>
+  </div>
+  {% if suivi %}
+  <div class="tuile">
+    <div class="tuile-titre">Voix inscrites</div>
+    <div class="tuile-valeur">{{ resume.voix_inscrites }}</div>
+    <div class="tuile-detail">marge <strong class="{{ 'positif' if resume.marge >= 0 else 'negatif' }}">{{ resume.marge }}</strong> par rapport au quorum
+      <br><span class="discret">d'après le sondage de participation ({{ suivi.nb_reponses }} réponse(s))</span></div>
+  </div>
+  {% endif %}
+  <div class="tuile">
+    <div class="tuile-titre">Majorité d'approbation</div>
+    <div class="tuile-valeur">{{ fraction }}</div>
+    <div class="tuile-detail">des voix exprimées ;
+      <label class="calcul">voix exprimées <input type="number" min="0" id="exprimees" value="{{ resume.total_voix }}"></label>
+      → <strong id="seuil-approbation">{{ approbation_si_tous }}</strong> voix « pour »</div>
+  </div>
+</div>
+
+{% if suivi %}{% include "_suivi_presence.html" %}{% endif %}
+
+<section class="carte">
+  <h2>Comités membres ({{ actifs | length }})</h2>
+  {% if visiteur %}
+    <p class="consigne">👁️ Consultation seule : la liste des comités membres est tenue à jour par le Chef de projet et le responsable Budget.
+      <br>👉 Cliquer sur une ligne pour afficher le président, son mail et l'élu référent.</p>
+  {% elif peut_gerer %}
+    <p class="consigne">👉 Cliquer sur le nom d'un organisme pour ouvrir sa fiche et le mettre à jour.</p>
+  {% else %}
+    <p class="consigne">👉 Cliquer sur le nom d'un organisme pour consulter sa fiche.</p>
+  {% endif %}
+  <p class="discret">Voix : {{ bareme.voix_base }} par membre ;
+    {% for seuil, bonus in bareme.seuils %}+{{ bonus }} à partir de {{ "{:,}".format(seuil).replace(",", " ") }} licencié(s){{ ' ; ' if not loop.last }}{% endfor %} ;
+    +{{ bareme.voix_bonus_categorie_1 }} en catégorie 1. Catégories : <a href="{{ url_for('adherents.referentiel') }}">référentiel CNOSF</a>.</p>
+  <div class="tableau-defilant">
+  <table>
+    {{ entetes() }}
+    <tbody>{% for c in actifs %}{{ ligne_comite(c) }}{% else %}<tr><td colspan="{{ nb_colonnes }}" class="discret">Aucun comité{{ ' : importer le fichier Excel des adhérents' if peut_gerer }}.</td></tr>{% endfor %}</tbody>
+  </table>
+  </div>
+</section>
+
+{% if non_a_jour or (suivi and non_inscrits) %}
+<section class="carte">
+  <h2>À relancer</h2>
+  <div class="grille-2">
+    <div>
+      <h3>Cotisation en attente ({{ non_a_jour | length }})</h3>
+      <ul>{% for c in non_a_jour %}
+        {% if visiteur %}
+        <li class="depliable" data-details="relance-{{ c.id }}" title="Cliquer pour afficher le contact"><span class="fleche">▸</span> {{ c.nom }} – {{ c._voix }} voix
+          <span id="relance-{{ c.id }}" hidden> – {{ c.president or 'président non renseigné' }}{% if c.mail_president %} – <a href="mailto:{{ c.mail_president }}">{{ c.mail_president }}</a>{% endif %}</span></li>
+        {% else %}
+        <li>{{ c.nom }} – {{ c._voix }} voix{% if c.mail_president %} – <a href="mailto:{{ c.mail_president }}">{{ c.mail_president }}</a>{% endif %}</li>
+        {% endif %}
+      {% else %}<li class="discret">aucun</li>{% endfor %}</ul>
+    </div>
+    {% if suivi %}
+    <div>
+      <h3>À jour, non inscrits à l'AG ({{ non_inscrits | length }})</h3>
+      <ul>{% for c in non_inscrits %}<li>{{ c.nom }} – {{ c._voix }} voix</li>{% else %}<li class="discret">aucun</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if inactifs and not visiteur %}
+<details class="carte">
+  <summary><strong>Comités désactivés ({{ inactifs | length }})</strong> – absents du dernier import ou désactivés à la main</summary>
+  <table>
+    {{ entetes() }}
+    <tbody>{% for c in inactifs %}{{ ligne_comite(c) }}{% endfor %}</tbody>
+  </table>
+</details>
+{% endif %}
+
+<script>
+  (function () {
+    var champ = document.getElementById("exprimees"), sortie = document.getElementById("seuil-approbation");
+    var fraction = "{{ fraction }}".split("/"), num = +fraction[0], den = +fraction[1];
+    champ.addEventListener("input", function () {
+      var n = Math.max(0, parseInt(champ.value || "0", 10));
+      sortie.textContent = Math.ceil(n * num / den);
+    });
+    // visiteur : clic sur une ligne -> affiche ou masque ses contacts
+    document.querySelectorAll(".depliable").forEach(function (ligne) {
+      ligne.addEventListener("click", function (evenement) {
+        if (evenement.target.closest("a")) return;  // un clic sur le mail ouvre la messagerie
+        var details = document.getElementById(ligne.dataset.details);
+        details.hidden = !details.hidden;
+        ligne.classList.toggle("ouverte", !details.hidden);
+      });
+    });
+  })();
+</script>
+{% endblock %}

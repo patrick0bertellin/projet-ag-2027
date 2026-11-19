@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block titre %}Aide{% endblock %}
+{% block contenu %}
+{% set visiteur = compte and compte.id == 'visiteur' %}
+{% set chef = 'Chef de projet' in mes_roles %}
+<div class="entete-page">
+  <h1>Aide</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('tableau_de_bord.accueil') }}">Retour au tableau de bord</a></div>
+</div>
+
+{% if visiteur %}
+<section class="carte">
+  <h2>Consultation sans identifiant</h2>
+  <p>Vous êtes entré sans identifiant : vous pouvez <strong>consulter</strong> trois onglets, sans aucune modification possible.
+     Pour travailler sur le projet, demandez un identifiant et un mot de passe à l'administrateur de l'application, puis
+     cliquez sur <em>Déconnexion</em> et connectez-vous.</p>
+  <h2>Tableau de bord</h2>
+  <ul>
+    <li>Les comptes à rebours jusqu'à l'Assemblée générale, au butoir de la convocation et au prochain jalon.</li>
+    <li>L'avancement global du projet et par phase, les tâches en retard et celles des 14 prochains jours.</li>
+    <li>La situation des voix et du quorum.</li>
+  </ul>
+  <h2>Rétroplanning</h2>
+  <ul>
+    <li>La liste des tâches de préparation de l'AG, avec leur échéance, leurs responsables et leur statut ; la vue Gantt les
+      montre sur une frise.</li>
+    <li>Cliquer sur une tâche ouvre son détail, en consultation seule.</li>
+    <li>Un « ~ » devant une date signale une échéance approximative (par exemple « Décembre 2026 ») ; les tâches de la phase
+      « Si le quorum n'est pas atteint » ne servent que si une seconde AG est nécessaire.</li>
+  </ul>
+  <h2>Adhérents</h2>
+  <ul>
+    <li>La liste des comités sportifs départementaux membres du CDOS 78, avec leur fédération, leur catégorie CNOSF, leur nombre
+      de licences, leurs voix et l'état de leur cotisation.</li>
+    <li><strong>Cliquer sur une ligne</strong> du tableau (ou sur un nom de la liste « À relancer ») affiche le président, son
+      mail et l'élu référent du CDOS ; un second clic les masque.</li>
+    <li>Voix : 1 par membre ; +1 de 1 à 2 000 licenciés, +2 de 2 001 à 10 000, +3 au-delà ; +5 si la fédération est olympique
+      (catégorie 1).</li>
+    <li>Seuls les comités à jour de leur cotisation à la date de l'AG votent ; un comité « en attente » peut régulariser à
+      l'accueil le jour même. Ni procuration ni vote par correspondance.</li>
+    <li>Quorum de participation : la moitié au moins du total des voix doit être présente. Majorité d'approbation : 2/3 des voix
+      exprimées ; le calculateur de la page donne le nombre de voix « pour » nécessaires.</li>
+  </ul>
+</section>
+{% else %}
+<section class="carte">
+  <h2>Connexion</h2>
+  <ul>
+    <li>Chacun se connecte avec l'identifiant et le mot de passe communiqués par l'administrateur ; le mot de passe se change
+      par le lien <em>Mot de passe</em> du bandeau.</li>
+    <li>Sans identifiant (bouton <em>Consulter sans identifiant</em>), un visiteur voit seulement le tableau de bord, le
+      rétroplanning et les adhérents, sans rien pouvoir modifier.</li>
+  </ul>
+  <h2>Rôles</h2>
+  <ul>
+    <li><strong>Chef de projet</strong> : tout (tâches, paramètres, comptes, validations, exports, sondage de participation et
+      présence le jour de l'AG).</li>
+    <li><strong>Communication</strong> : tâches de la catégorie Communication, calendrier de communication.</li>
+    <li><strong>Budget</strong> : tâches de la catégorie Budget, lignes budgétaires, cotisations et liste des adhérents.</li>
+    <li><strong>Contribution</strong> : la fiche de son pôle pour le rapport d'activité.</li>
+    <li><strong>Lecture</strong> : consultation de tout, sans modification.</li>
+    <li><strong>Visiteur</strong> (sans identifiant) : tableau de bord, rétroplanning et adhérents en consultation.</li>
+  </ul>
+  <p>Chacun peut mettre à jour le statut, l'avancement et le commentaire des tâches dont il est responsable.
+     Le lien se fait par l'<em>alias</em> du compte (le prénom tel qu'il est écrit dans la colonne Responsables).
+     Seul le Chef de projet crée, supprime ou redate une tâche.</p>
+  <h2>Rétroplanning</h2>
+  <ul>
+    <li>Un « ~ » devant une date signale une échéance approximative (une période comme « Décembre 2026 ») : la date retenue est la fin de la période.</li>
+    <li>Les tâches de la phase « Si le quorum n'est pas atteint » sont conditionnelles : elles ne comptent ni dans l'avancement ni dans les retards.</li>
+    <li>Passer une tâche à « Fait » met son avancement à 100 %. Les tâches « Sans objet » ne comptent pas dans l'avancement.</li>
+    <li>Les contrôles de cohérence s'affichent en tête du rétroplanning.</li>
+  </ul>
+  <h2>Adhérents</h2>
+  <ul>
+    <li>Un comité est à jour de cotisation si son mode de règlement est renseigné ; sinon il est « en attente » et ses voix ne comptent pas.</li>
+    <li>Voix : 1 par membre ; +1 de 1 à 2 000 licenciés, +2 de 2 001 à 10 000, +3 au-delà ; +5 en catégorie 1. La catégorie vient de la fédération dans le référentiel CNOSF.</li>
+    <li>Quorum de participation : la moitié au moins des voix des comités à jour, constatée sur les voix présentes. Majorité d'approbation : 2/3 des voix exprimées (paramétrable).</li>
+    <li>Mise à jour d'un comité : cliquer sur le nom de l'organisme pour ouvrir sa fiche (Chef de projet et Budget). Une alerte
+      rappelle les comités modifiés depuis le dernier export Excel.</li>
+    <li>Import Excel : aperçu des différences avant toute écriture ; les comités absents du fichier sont désactivés.
+      L'export reproduit les onglets Adhésion, Voix, Coordonnées et tec avec la mise en forme du fichier d'origine (filtres,
+      couleurs dont celles des catégories, mise en page, propriétés) et des formules corrigées.</li>
+    {% if chef %}
+    <li>Sondage de participation (Chef de projet) : importer le fichier des réponses ; chaque réponse est rattachée au comité
+      par son nom (à la main si besoin) et donne les présents, représentés et absents annoncés. Le jour de l'AG, cocher les
+      comités présents : la page indique si le quorum est atteint.</li>
+    {% endif %}
+  </ul>
+  <h2>Rapport d'activité</h2>
+  <ul>
+    <li>Une fiche par pôle (plus Général, Communication et Formation) : présentation reprise du rapport 2025, bilan des
+      engagements annoncés pour 2026, actions réalisées ou entamées sans avoir été prévues, chiffres clés, actions menées
+      et perspectives 2027.</li>
+    <li>Un compte <strong>Contribution</strong> ne voit que la fiche du pôle indiqué dans son compte. <em>Enregistrer</em>
+      la garde en brouillon ; <em>Soumettre</em> la transmet au Chef de projet et la verrouille pour le pôle.</li>
+    <li>Le Chef de projet peut tout modifier, valider une fiche soumise ou la renvoyer en brouillon avec un commentaire,
+      et exporter le rapport compilé en Word (les parties vides y sont marquées « [à compléter] »).</li>
+    <li>Dans les textes, une ligne commençant par « - » devient une puce dans le document Word.</li>
+  </ul>
+  <h2>Butoirs</h2>
+  <p>Ils sont recalculés à partir de la date de l'AG et des délais saisis dans les Paramètres :
+     convocation J-30, seconde AG J+21, AG du CNOSF au plus tôt J+45, déclaration en préfecture AG + 3 mois.</p>
+  <p>Toute modification est enregistrée dans l'onglet Journal du Google Sheet.</p>
+</section>
+{% endif %}
+<p><a class="bouton secondaire" href="{{ url_for('tableau_de_bord.accueil') }}">Retour au tableau de bord</a></p>
+{% endblock %}

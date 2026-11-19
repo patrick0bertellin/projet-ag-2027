@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block titre %}Frise des jalons{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>Frise des jalons</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('retroplanning.liste') }}">Retour à la liste</a></div>
+</div>
+{% if vide %}
+  <p class="discret">Aucune tâche datée.</p>
+{% else %}
+<p class="legende">
+  <span class="pastille point"></span> échéance précise
+  <span class="pastille periode"></span> période (date approximative)
+  <span class="pastille fait"></span> fait
+  <span class="pastille ag"></span> assemblée générale
+  <span class="pastille butoir"></span> butoir statutaire
+  {% if aujourdhui is not none %}<span class="pastille jour"></span> aujourd'hui{% endif %}
+</p>
+<div class="gantt">
+  <div class="gantt-ligne gantt-mois">
+    <div class="gantt-libelle"></div>
+    <div class="gantt-piste">
+      {% for m in mois %}<div class="mois" style="left: {{ m.gauche }}%; width: {{ m.largeur }}%">{{ m.libelle }}</div>{% endfor %}
+    </div>
+  </div>
+  <div class="gantt-corps">
+    <div class="gantt-reperes">
+      {% for r in reperes %}<div class="repere {{ 'ag' if r.cle == 'ag' else 'butoir' }}" style="left: {{ r.gauche }}%" title="{{ r.libelle }} : {{ r.date | date_fr }}"><span>{{ 'AG' if r.cle == 'ag' else r.libelle.split(' (')[0] }}</span></div>{% endfor %}
+      {% if aujourdhui is not none %}<div class="repere jour" style="left: {{ aujourdhui }}%" title="Aujourd'hui"></div>{% endif %}
+    </div>
+    {% for phase, elements in lignes %}
+      <div class="gantt-phase">{{ phase }}</div>
+      {% for e in elements %}
+        <div class="gantt-ligne">
+          <div class="gantt-libelle" title="{{ e.t.action }}"><a href="{{ url_for('retroplanning.tache', identifiant=e.t.id) }}">{{ e.t.id }}</a> {{ e.t.action | truncate(55) }}</div>
+          <div class="gantt-piste">
+            {% if e.largeur %}
+              <div class="periode {{ 'fait' if e.t.statut == 'Fait' }}" style="left: {{ e.gauche }}%; width: {{ e.largeur }}%" title="{{ e.t.echeance_texte }} ({{ e.t.statut }})"></div>
+            {% else %}
+              <div class="point {{ 'fait' if e.t.statut == 'Fait' }} {{ 'ag' if e.t._date == reperes[1].date }}" style="left: {{ e.gauche }}%" title="{{ e.t._date | date_fr }} ({{ e.t.statut }})"></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

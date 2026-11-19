@@ -1,0 +1,11 @@
+credentials/
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.DS_Store
+.pytest_cache/
+# fichiers verrous de Word / Excel
+~$*

@@ -1,0 +1,897 @@
+{
+  "projet": {
+    "nom": "Projet AG 2027",
+    "evenement": "Assemblée générale ordinaire du CDOS 78",
+    "date_ag": "2027-03-20",
+    "lieu": "Le Port-Marly",
+    "butoir_convocation": "2027-02-18",
+    "date_repli_max": "2027-04-10",
+    "source": "2026-11-20-Retroplanning_AGO_CDOS78_v05.docx"
+  },
+  "taches": [
+    {
+      "id": "T001",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Fait",
+      "date_cible": "2026-11-17",
+      "date_approx": false,
+      "action": "Date et lieu retenus : samedi 20 mars 2027, Le Port-Marly",
+      "responsables": "Karine, BE",
+      "base": "Art. 7 I",
+      "categorie": "Logistique",
+      "statut": "Fait",
+      "avancement": 100
+    },
+    {
+      "id": "T002",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": true,
+      "action": "Etablir le budget prévisionnel",
+      "responsables": "Patrick, Louis",
+      "base": "",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T003",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Lundi 23 novembre 2026",
+      "date_cible": "2026-11-23",
+      "date_approx": false,
+      "action": "Lancer la production des rapports de l'AG (voir le plan d'action dédié)",
+      "responsables": "Patrick",
+      "base": "Art. 8",
+      "categorie": "Rapport d'activité",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T004",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Début décembre 2026",
+      "date_cible": "2026-12-10",
+      "date_approx": true,
+      "action": "Recenser cooptations et membres d'honneur",
+      "responsables": "Pierre",
+      "base": "Art. 7 I",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T005",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": true,
+      "action": "Save-the-date aux comités membres, au CNOSF, au CROS et aux personnalités invitées",
+      "responsables": "Pierre, Siham",
+      "base": "Art. 6",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T006",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": true,
+      "action": "Annonce publique de la date ; page « AG 2027 » sur www.cdos78.fr ; formulaire d'inscription des comités",
+      "responsables": "Siham, Marion Lebel",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T007",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": true,
+      "action": "Confirmer le mandat du commissaire aux comptes et caler son intervention (fin janvier) et la remise de son rapport (12 février)",
+      "responsables": "Louis",
+      "base": "Art. 8, 16",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T008",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": true,
+      "action": "Demander à l'expert-comptable des comptes 2026 pour le 22 janvier",
+      "responsables": "Louis",
+      "base": "Art. 16",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T009",
+      "phase": "Phase 1 – Cadrage",
+      "echeance_texte": "Décembre 2026 (butoir 18 janvier 2027)",
+      "date_cible": "2027-01-18",
+      "date_approx": false,
+      "action": "Si modification du RI : transmission du projet au CNOSF",
+      "responsables": "Patrick",
+      "base": "Art. 23",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T010",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": true,
+      "action": "Mise en place suivi des opérations et formulaires de participation (Google Forms)",
+      "responsables": "Patrick",
+      "base": "",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T011",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "31 décembre 2026",
+      "date_cible": "2026-12-31",
+      "date_approx": false,
+      "action": "Clôture de l'exercice 2026",
+      "responsables": "Louis",
+      "base": "Art. 17",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T012",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Début janvier 2027",
+      "date_cible": "2027-01-10",
+      "date_approx": true,
+      "action": "Relance des comités non à jour de la cotisation en cours (période AG 2026 – AG 2027), avec rappel que le droit de vote en dépend",
+      "responsables": "Patrick",
+      "base": "Art. 6",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T013",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Janvier 2027",
+      "date_cible": "2027-01-31",
+      "date_approx": true,
+      "action": "Publications « 2026 en chiffres » et vœux sur Facebook, Instagram et LinkedIn",
+      "responsables": "Siham, Marion Lebel",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T014",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Jeudi 7 janvier 2027",
+      "date_cible": "2027-01-07",
+      "date_approx": false,
+      "action": "BE : fixer l'ordre du jour (transmis ensuite au CA par mail) ; point d'avancement des rapports",
+      "responsables": "BE",
+      "base": "Art. 7 I",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T015",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Lundi 11 janvier 2027",
+      "date_cible": "2027-01-11",
+      "date_approx": false,
+      "action": "Envoi au CA, par mail, de l'ordre du jour fixé par le BE",
+      "responsables": "Patrick",
+      "base": "Art. 7 I",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T016",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Vendredi 8 janvier 2027",
+      "date_cible": "2027-01-08",
+      "date_approx": false,
+      "action": "Contributions des pôles au rapport d'activité ; nombre de licenciés de chaque comité (base des voix)",
+      "responsables": "Responsables de pôle, Patrick",
+      "base": "Art. 6, 8",
+      "categorie": "Rapport d'activité",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T017",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Vendredi 22 janvier 2027",
+      "date_cible": "2027-01-22",
+      "date_approx": false,
+      "action": "Comptes annuels 2026 (bilan, compte de résultat, annexe), projet de rapport financier et de budget 2027",
+      "responsables": "Louis, expert-comptable",
+      "base": "Art. 16",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T018",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Semaine du 25 janvier 2027",
+      "date_cible": "2027-01-25",
+      "date_approx": false,
+      "action": "Intervention du commissaire aux comptes",
+      "responsables": "Commissaire aux comptes, Louis",
+      "base": "Art. 16",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T019",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Mardi 2 février 2027",
+      "date_cible": "2027-02-02",
+      "date_approx": false,
+      "action": "Arrêter les comptes 2026, valider les rapports, le budget 2027 et la cotisation, confirmer ratifications et membres d'honneur",
+      "responsables": "BE (à programmer)",
+      "base": "Art. 7, 8",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T020",
+      "phase": "Phase 2 – Clôture et préparation",
+      "echeance_texte": "Vendredi 12 février 2027",
+      "date_cible": "2027-02-12",
+      "date_approx": false,
+      "action": "Rapport du commissaire aux comptes signé ; dossier de l'AG finalisé",
+      "responsables": "Commissaire aux comptes, Louis, Patrick",
+      "base": "Art. 8",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T021",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Lundi 15 février 2027 (butoir jeudi 18 février)",
+      "date_cible": "2027-02-15",
+      "date_approx": false,
+      "action": "Envoi de la convocation avec lien de participation  : ordre du jour, adresse au Port-Marly, horaires, modèle de mandat, rappel « ni procuration ni vote par correspondance », possibilité de régulariser la cotisation à l'accueil le jour de l'AG",
+      "responsables": "Pierre (Patrick)",
+      "base": "Art. 6, 7",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T022",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Avec la convocation",
+      "date_cible": "2027-02-15",
+      "date_approx": true,
+      "action": "Rapport d'activité 2026 – perspectives 2027, rapport moral, rapport financier, comptes 2026, rapport du commissaire aux comptes, budget 2027, projet de PV de l'AG 2026",
+      "responsables": "Patrick, Louis",
+      "base": "Art. 7 I, 8",
+      "categorie": "Rapport d'activité",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T023",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Février",
+      "date_cible": "2027-02-15",
+      "date_approx": true,
+      "action": "Tableau des voix par membre et seuil de quorum",
+      "responsables": "Patrick",
+      "base": "Art. 6, 7 II",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T024",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Semaine du 22 février 2027",
+      "date_cible": "2027-02-22",
+      "date_approx": false,
+      "action": "Invitations personnalisées aux institutions, partenaires et Comités non adhérents (sans droit de vote)",
+      "responsables": "Pierre",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T025",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Dimanche 28 février 2027",
+      "date_cible": "2027-02-28",
+      "date_approx": false,
+      "action": "Date limite des questions écrites",
+      "responsables": "Patrick",
+      "base": "RI",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T026",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "1er – 12 mars 2027",
+      "date_cible": "2027-03-12",
+      "date_approx": false,
+      "action": "Série de publications « un pôle, une année » (5 publications)",
+      "responsables": "Siham, Marion Lebel, Responsables de pôle",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T027",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Lundi 8 mars 2027",
+      "date_cible": "2027-03-08",
+      "date_approx": false,
+      "action": "Point de mobilisation : projection du quorum, relance ciblée des comités à fort nombre de voix",
+      "responsables": "Patrick, Pierre",
+      "base": "Art. 7 II",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T028",
+      "phase": "Phase 3 – Convocation et mobilisation",
+      "echeance_texte": "Février – mars 2027",
+      "date_cible": "2027-03-31",
+      "date_approx": true,
+      "action": "Relances cotisations et adhésions",
+      "responsables": "Patrick",
+      "base": "Art. 6",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T029",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Lundi 15 mars 2027",
+      "date_cible": "2027-03-15",
+      "date_approx": false,
+      "action": "BE : déroulé, intervenants, scénario des votes, support projeté",
+      "responsables": "Alexis, Pierre",
+      "base": "",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T030",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Lundi 15 mars 2027",
+      "date_cible": "2027-03-15",
+      "date_approx": false,
+      "action": "Préparer nouvelles adhésions à l'accueil : liste des comités non à jour et montant dû, moyens de paiement acceptés, reçus, feuille d’émargement",
+      "responsables": "Louis, Patrick",
+      "base": "Art. 6",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T031",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Lundi 15 mars 2027",
+      "date_cible": "2027-03-15",
+      "date_approx": false,
+      "action": "Dernier rappel aux comités adhérents : horaires, accès, mandat",
+      "responsables": "Patrick",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T032",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Mercredi 17 mars 2027",
+      "date_cible": "2027-03-17",
+      "date_approx": false,
+      "action": "Liste des votants à jour de cotisation et de leurs voix, à compléter à l'accueil le jour J ; feuilles d'émargement votants et invités ; bulletins",
+      "responsables": "Patrick",
+      "base": "Art. 6",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T033",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Vendredi 19 mars 2027",
+      "date_cible": "2027-03-19",
+      "date_approx": false,
+      "action": "Vérification de la salle au Port-Marly : technique, signalétique, accueil",
+      "responsables": "Alexis",
+      "base": "",
+      "categorie": "Logistique",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T034",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Samedi 20 mars 2027, à l'accueil",
+      "date_cible": "2027-03-20",
+      "date_approx": false,
+      "action": "Validation des adhésions des comités non à jour; mise à jour de la liste des votants et de leurs voix avant le constat du quorum",
+      "responsables": "Patrick",
+      "base": "Art. 6, 7 II",
+      "categorie": "Quorum et adhésions",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T035",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Samedi 20 mars 2027",
+      "date_cible": "2027-03-20",
+      "date_approx": false,
+      "action": "AGO au Port-Marly : émargement, constat du quorum à l'ouverture, votes",
+      "responsables": "Alexis, Patrick",
+      "base": "Art. 7 II",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T036",
+      "phase": "Phase 4 – Derniers jours et jour J",
+      "echeance_texte": "Samedi 20 mars 2027",
+      "date_cible": "2027-03-20",
+      "date_approx": false,
+      "action": "Couverture en direct : photos, stories, publication LinkedIn",
+      "responsables": "Siham, Marion Lebel",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T037",
+      "phase": "Phase 5 – Si le quorum n'est pas atteint",
+      "echeance_texte": "Samedi 20 mars 2027",
+      "date_cible": "2027-03-20",
+      "date_approx": false,
+      "action": "Constat de carence inscrit au procès-verbal",
+      "responsables": "Patrick, Pierre",
+      "base": "Art. 7 II",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T038",
+      "phase": "Phase 5 – Si le quorum n'est pas atteint",
+      "echeance_texte": "Au plus tard samedi 10 avril 2027",
+      "date_cible": "2027-04-10",
+      "date_approx": false,
+      "action": "Nouvelle AG, sans condition de quorum, sur le même ordre du jour",
+      "responsables": "Patrick, Pierre",
+      "base": "Art. 7 II",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T039",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Semaine du 22 mars 2027",
+      "date_cible": "2027-03-22",
+      "date_approx": false,
+      "action": "Article de compte rendu sur le site, publications bilan et remerciements, communiqué de presse",
+      "responsables": "Siham, Marion Lebel",
+      "base": "Com.",
+      "categorie": "Communication",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T040",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Fin mars 2027",
+      "date_cible": "2027-03-31",
+      "date_approx": true,
+      "action": "Appel de la cotisation votée le 20 mars, applicable jusqu'à l'AG 2028",
+      "responsables": "Patrick",
+      "base": "Art. 8",
+      "categorie": "Budget",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T041",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Lundi 19 avril 2027 (cible)",
+      "date_cible": "2027-04-19",
+      "date_approx": false,
+      "action": "PV signé par le Président et le SG, sur feuillets numérotés",
+      "responsables": "Pierre, Patrick",
+      "base": "Art. 7 II",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T042",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Avril 2027",
+      "date_cible": "2027-04-30",
+      "date_approx": true,
+      "action": "Envoi au CNOSF : PV, délibérations, comptes, rapport du commissaire aux comptes, rapport d'activité, rapport moral",
+      "responsables": "Patrick",
+      "base": "Art. 7 II, 16",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T043",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Avril 2027",
+      "date_cible": "2027-04-30",
+      "date_approx": true,
+      "action": "Diffusion du rapport annuel et des comptes à tous les membres, si non fait avec la convocation",
+      "responsables": "Patrick",
+      "base": "Art. 7 I",
+      "categorie": "Rapport d'activité",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T044",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Avant mardi 4 mai 2027",
+      "date_cible": "2027-05-04",
+      "date_approx": false,
+      "action": "Confirmer que l'AG du CNOSF se tient au moins 45 jours après le 20 mars",
+      "responsables": "Pierre",
+      "base": "Art. 7 I",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T045",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Au plus tard dimanche 20 juin 2027",
+      "date_cible": "2027-06-20",
+      "date_approx": false,
+      "action": "Déclaration au CNOSF et à la préfecture des changements dans l'administration (cooptations, etc.)",
+      "responsables": "Patrick",
+      "base": "Art. 21",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    },
+    {
+      "id": "T046",
+      "phase": "Phase 6 – Après l'AG",
+      "echeance_texte": "Avant fin juin",
+      "date_cible": "2027-06-30",
+      "date_approx": true,
+      "action": "Etablir le bilan (déroulement, organisation, budget…)",
+      "responsables": "Patrick",
+      "base": "",
+      "categorie": "Pilotage",
+      "statut": "À faire",
+      "avancement": 0
+    }
+  ],
+  "calendrier_communication": [
+    {
+      "date_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "action": "Save-the-date aux comités : date, lieu au Port-Marly, rappel que seuls les comités à jour votent",
+      "canaux": "Mail",
+      "responsables": "Com, Patrick"
+    },
+    {
+      "date_texte": "Décembre 2026",
+      "date_cible": "2026-12-31",
+      "action": "Annonce publique de la date ; création de la page « AG 2027 » et du formulaire d'inscription",
+      "canaux": "Site, LinkedIn, Facebook",
+      "responsables": "Com"
+    },
+    {
+      "date_texte": "Janvier 2027",
+      "date_cible": "2027-01-31",
+      "action": "Relance ciblée des comités non à jour de cotisation",
+      "canaux": "Mail, téléphone",
+      "responsables": "Patrick"
+    },
+    {
+      "date_texte": "Janvier 2027",
+      "date_cible": "2027-01-31",
+      "action": "Vœux et rétrospective « 2026 en chiffres »",
+      "canaux": "Facebook, Instagram, LinkedIn",
+      "responsables": "Com"
+    },
+    {
+      "date_texte": "Lundi 15 février 2027",
+      "date_cible": "2027-02-15",
+      "action": "Convocation et dossier ; mise à jour de la page « AG 2027 » avec l'ordre du jour",
+      "canaux": "Mail, site",
+      "responsables": "Com, Patrick"
+    },
+    {
+      "date_texte": "Semaine du 22 février 2027",
+      "date_cible": "2027-02-22",
+      "action": "Invitations aux institutions et partenaires",
+      "canaux": "Mail ou courrier personnalisé",
+      "responsables": "Com, Pierre"
+    },
+    {
+      "date_texte": "1er – 12 mars 2027",
+      "date_cible": "2027-03-12",
+      "action": "Série « un pôle, une année » : une publication par pôle",
+      "canaux": "Facebook, Instagram, LinkedIn",
+      "responsables": "Com, Responsables de pôle"
+    },
+    {
+      "date_texte": "Lundi 8 mars 2027",
+      "date_cible": "2027-03-08",
+      "action": "Point inscriptions / quorum ; appels aux comités non inscrits",
+      "canaux": "Mail",
+      "responsables": "Com, Patrick"
+    },
+    {
+      "date_texte": "Lundi 15 mars 2027",
+      "date_cible": "2027-03-15",
+      "action": "Dernier rappel aux inscrits : horaires, accès, stationnement, mandat",
+      "canaux": "Mail",
+      "responsables": "Patrick"
+    },
+    {
+      "date_texte": "18 – 19 mars 2027",
+      "date_cible": "2027-03-19",
+      "action": "Teasers J-2 et J-1",
+      "canaux": "Stories Instagram, LinkedIn",
+      "responsables": "Com"
+    },
+    {
+      "date_texte": "Samedi 20 mars 2027",
+      "date_cible": "2027-03-20",
+      "action": "Couverture en direct, sans diffusion de votes nominatifs",
+      "canaux": "Instagram, Facebook, LinkedIn",
+      "responsables": "Com"
+    },
+    {
+      "date_texte": "Semaine du 22 mars 2027",
+      "date_cible": "2027-03-22",
+      "action": "Article de compte rendu, publication bilan, remerciements à la Ville du Port-Marly, communiqué de presse",
+      "canaux": "Site, réseaux, presse",
+      "responsables": "Com, Pierre"
+    },
+    {
+      "date_texte": "Avril 2027",
+      "date_cible": "2027-04-30",
+      "action": "Mise en ligne du rapport d'activité 2026 – perspectives 2027",
+      "canaux": "Site",
+      "responsables": "Com"
+    }
+  ],
+  "regles_statutaires": [
+    {
+      "article": "Art. 6",
+      "regle": "Seuls les membres, c'est-à-dire les comités sportifs départementaux des Yvelines (catégories 1 à 5), à jour de leur cotisation à la date de l'AG votent (RI art. 4.3). Voix : 1 de base, +1 à +3 selon le nombre de licenciés, +5 pour la catégorie 1.",
+      "consequence": "Relancer tôt les comités non à jour de la cotisation en cours (votée le 28 mars 2026, 150 €) et collecter les effectifs de licenciés pour établir le tableau des voix."
+    },
+    {
+      "article": "Art. 6",
+      "regle": "Chaque comité est représenté par son Président ou un membre de son organe dirigeant mandaté par lui.",
+      "consequence": "Prévoir un modèle de mandat joint à la convocation."
+    },
+    {
+      "article": "Art. 7 I",
+      "regle": "Convocation par le Président au moins 30 jours avant.",
+      "consequence": "Butoir : jeudi 18 février 2027."
+    },
+    {
+      "article": "Art. 7 I",
+      "regle": "L'ordre du jour est fixé par le CA sur proposition du Bureau exécutif.",
+      "consequence": "Pour simplification, le BE du 7 janvier fixera l’ordre du jour qui sera transmis au CA (mail)"
+    },
+    {
+      "article": "Art. 7 I",
+      "regle": "Date fixée au moins 45 jours avant l'AG du CNOSF.",
+      "consequence": "L'AG du CNOSF ne doit pas se tenir avant le mardi 4 mai 2027."
+    },
+    {
+      "article": "Art. 7 I",
+      "regle": "Rapport annuel et comptes adressés à tous les membres et au CNOSF.",
+      "consequence": "Délai non précisé : pour simplification sera joint au PV adressé aux membres."
+    },
+    {
+      "article": "Art. 7 II",
+      "regle": "Quorum : présents détenant au moins la moitié des voix. À défaut, nouvelle AG convoquée dans les 21 jours, sans quorum.",
+      "consequence": "Date de repli au plus tard le samedi 10 avril 2027."
+    },
+    {
+      "article": "Art. 7 II",
+      "regle": "Délibérations limitées à l'ordre du jour ; majorité absolue au 1er tour, relative au 2nd ; scrutin secret sur les personnes.",
+      "consequence": "Tout point à voter doit figurer dans la convocation : pour simplification vote à main levée si pas d’objection"
+    },
+    {
+      "article": "Art. 7 II",
+      "regle": "Ni procuration ni vote par correspondance.",
+      "consequence": "La mobilisation physique conditionne le quorum."
+    },
+    {
+      "article": "Art. 7 II",
+      "regle": "PV signé par le Président et le Secrétaire général, sur feuillets numérotés, sans blanc ni rature ; copie au CNOSF.",
+      "consequence": "Prévoir la rédaction et la signature du PV dans le mois qui suit l’AG."
+    },
+    {
+      "article": "Art. 8",
+      "regle": "L'AGO examine le rapport de gestion, approuve les comptes après rapport du vérificateur, vote le budget et fixe les cotisations de l'année à venir.",
+      "consequence": "Comptes 2026 arrêtés et vérifiés par le commissaire aux comptes avant l'envoi de la convocation ; cotisation proposée par le CA, applicable du 20 mars 2027 jusqu'à l'AG 2028."
+    },
+    {
+      "article": "Art. 1, 4, 10, 13",
+      "regle": "Ratifications par l'AG la plus proche : cooptations des nouveaux membres au CA.",
+      "consequence": "Recenser les nouveaux membres avant envoi convocation."
+    },
+    {
+      "article": "Art. 16-17",
+      "regle": "Exercice civil ; compte de résultat, bilan et annexe vérifiés chaque année.",
+      "consequence": "Clôture au 31 décembre 2026, comptes disponibles le 22 janvier 2027."
+    },
+    {
+      "article": "Art. 21",
+      "regle": "Changements dans l'administration déclarés au CNOSF et à la préfecture sous 3 mois.",
+      "consequence": "Butoir : dimanche 20 juin 2027, si changements."
+    },
+    {
+      "article": "Art. 22-23",
+      "regle": "Toute modification du RI est soumise au CNOSF ; son silence pendant 2 mois vaut approbation.",
+      "consequence": "Si une modification du RI est prévue, la transmettre au plus tard le lundi 18 janvier 2027."
+    }
+  ],
+  "publics": [
+    {
+      "public": "Comités à jour de cotisation",
+      "a_l_ag": "Votants",
+      "canaux": "Mail nominatif au président et au secrétaire du comité ; téléphone ; formulaire d'inscription",
+      "message": "Convocation, documents, mandat ; « votre présence compte pour le quorum »"
+    },
+    {
+      "public": "Comités non à jour",
+      "a_l_ag": "Votants s'ils sont à jour à la date de l'AG",
+      "canaux": "Mail",
+      "message": "Régulariser la cotisation pour pouvoir voter : avant l'AG, ou le jour même à l'accueil avant l'ouverture"
+    },
+    {
+      "public": "Élus et salariés du CDOS 78",
+      "a_l_ag": "Organisateurs",
+      "canaux": "Réunion interne, messagerie",
+      "message": "Rôle de chacun le jour J ; relais des publications sur leurs propres réseaux et auprès du Comité dont ils sont élus"
+    },
+    {
+      "public": "Institutions et partenaires (SDJES, CROSIF, CNOSF, Département, Ville du Port-Marly, partenaires privés)",
+      "a_l_ag": "Invités, sans droit de vote",
+      "canaux": "Invitation personnalisée du Président",
+      "message": "Bilan 2026 et ambitions 2027 ; remerciements"
+    },
+    {
+      "public": "Clubs, licenciés, grand public",
+      "a_l_ag": "Information, sans droit de vote",
+      "canaux": "Site, Facebook, Instagram, LinkedIn",
+      "message": "Chiffres clés 2026, temps forts, perspectives 2027"
+    },
+    {
+      "public": "Presse locale",
+      "a_l_ag": "Information",
+      "canaux": "Communiqué de presse",
+      "message": "Bilan de l'année et décisions de l'AG"
+    }
+  ],
+  "canaux": [
+    {
+      "canal": "Mail nominatif",
+      "usage": "Canal officiel vers les comités membres",
+      "contenus": "Save-the-date, convocation et dossier, relances, dernier rappel"
+    },
+    {
+      "canal": "Téléphone",
+      "usage": "Relance des comités qui ne se sont pas inscrits",
+      "contenus": "Appels répartis entre les administrateurs, priorité aux comités à fort nombre de voix"
+    },
+    {
+      "canal": "Site www.cdos78.fr",
+      "usage": "Page de référence « AG 2027 »",
+      "contenus": "Date, lieu, accès, horaires, ordre du jour ; formulaire d'inscription ; après l'AG : article et rapport d'activité en PDF. Les documents soumis au vote sont envoyés aux comités ou placés dans une page protégée par mot de passe."
+    },
+    {
+      "canal": "LinkedIn",
+      "usage": "Institutions, partenaires, entreprises",
+      "contenus": "Annonce, bilan 2026 par pôle, compte rendu, remerciements aux partenaires"
+    },
+    {
+      "canal": "Facebook",
+      "usage": "Clubs, bénévoles, licenciés",
+      "contenus": "Annonce, « un pôle, une année », photos du jour J"
+    },
+    {
+      "canal": "Instagram",
+      "usage": "Public plus jeune, visuels",
+      "contenus": "Visuels chiffres clés, stories J-2 et J-1, stories en direct le jour J"
+    },
+    {
+      "canal": "Communiqué de presse",
+      "usage": "Presse locale et départementale",
+      "contenus": "Après l'AG : résolutions adoptées, chiffres clés, perspectives"
+    }
+  ],
+  "ordre_du_jour": [
+    "Accueil, émargement et constat du quorum",
+    "Ouverture par le Président",
+    "Approbation du procès-verbal de l'AG du 28 mars 2026",
+    "Rapport moral du Président – vote",
+    "Rapport d'activité 2026 et perspectives 2027 (Secrétaire général et responsables de pôle)",
+    "Rapport financier et comptes 2026 (Louis)",
+    "Rapport du commissaire aux comptes",
+    "Approbation des comptes 2026, affectation du résultat et quitus – votes",
+    "Budget prévisionnel 2027 – vote",
+    "Montant de la cotisation applicable jusqu'à l'AG 2028, sur proposition du CA – vote",
+    "Ratifications des cooptations d'administrateurs (art. 13)",
+    "Le cas échéant, modification du règlement intérieur, après avis du CNOSF (art. 22-23)",
+    "Réponses aux questions écrites",
+    "Interventions des personnalités invitées et clôture"
+  ],
+  "points_de_vigilance": [
+    "Le risque principal reste le quorum : sans procuration ni vote à distance, il faut que les comités présents détiennent la moitié des voix.",
+    "Quorum. En 2026, 31 organismes à jour totalisaient 204 voix (quorum 102) ; 120 voix étaient présentes ou représentées, soit une marge de 18 voix seulement. Les comités de catégorie 1 pèsent au moins 6 voix chacun : les relancer en priorité.",
+    "Délai de convocation. En 2026, la convocation était datée du 8 mars pour une AG le 28 mars, soit 20 jours, alors que les statuts du 13 octobre 2025 en imposent 30. En 2027, le 18 février est un butoir ferme.",
+    "Calendrier comptable resserré. Les comptes 2026 doivent être prêts le 22 janvier et le rapport du commissaire aux comptes signé le 12 février. À sécuriser dès décembre.",
+    "Cotisation. Le montant voté s'applique de la date de l'AG jusqu'à l'AG suivante, et non à l'année civile. Le droit de vote le 20 mars dépend donc du paiement, à la date de l'AG, de la cotisation votée le 28 mars 2026 (150 €). La cotisation votée le 20 mars 2027 sera appelée après l'AG.",
+    "PV de l'AG 2026 à corriger avant approbation. Le titre indique « 28 mars 2025 », un intertitre mentionne « comptes 2024 et 2025 » et la résolution 4 (budget) reprend le texte de la cotisation.",
+    "Base de calcul du quorum. L'art. 7 II précise : « la moitié des voix dont disposerait au total l'AG ».",
+    "Seconde AG. « Convoquée dans les 21 jours » peut se lire comme la date d'envoi ou la date de tenue. Viser une tenue au plus tard le 10 avril 2027 couvre les deux lectures.",
+    "AG du CNOSF. Elle s'est tenue le 30 juin en 2026. La date 2027 n'est pas encore publiée ; elle devra être au plus tôt le 4 mai 2027.",
+    "Droit de vote. Seuls les comités sportifs départementaux des Yvelines membres du CDOS 78 et à jour de leur cotisation à la date de l'AG votent. Un comité peut régulariser sa cotisation le jour même, à l'accueil, avant l'ouverture : la liste des votants et le décompte des voix sont arrêtés après l'accueil, juste avant le constat du quorum. Les invités, partenaires et clubs assistent sans voter : prévoir un émargement séparé et des bulletins remis aux seuls votants.",
+    "Lieu : indiquer l'adresse exacte à Port Marly, l'accès en transports et le stationnement dans la convocation.",
+    "Obligations hors statuts. À vérifier auprès de l'expert-comptable : publication des comptes au Journal officiel si les subventions et dons dépassent le seuil légal."
+  ],
+  "questions_a_trancher": [
+    "Une modification du règlement intérieur est-elle prévue ? (envoi au CNOSF avant le 18 janvier)",
+    "Quelles sont les cooptations ou une vacance à faire ratifier ?",
+    "Des titres de membre d'honneur seront-ils proposés ?",
+    "Quelle date de repli réserver pour une seconde AG (au plus tard le 10 avril) ?",
+    "Quel montant de cotisation proposer pour la période de l'AG 2027 à l'AG 2028 ?"
+  ],
+  "_notes": [
+    "date_approx=true : l'échéance du document est un mois ou une période ('Décembre 2026', 'Avec la convocation') ; la date retenue est la fin de la période, à corriger dans l'application.",
+    "La tâche T038 (seconde AG) ne s'active que si le quorum n'est pas atteint le 20 mars."
+  ]
+}

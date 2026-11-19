@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titre %}Référentiel CNOSF{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>Référentiel des fédérations du CNOSF</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.liste') }}">Retour aux adhérents</a></div>
+</div>
+{% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+<p class="discret">La catégorie de chaque comité (et donc le bonus de 5 voix de la catégorie 1) est déduite de sa fédération dans ce référentiel. {{ federations | length }} fédérations.</p>
+{% if peut_gerer %}
+<form method="post" enctype="multipart/form-data" class="carte formulaire">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+  <label>Nouveau fichier du référentiel (onglet « Disciplines », colonnes Catégorie, Libellé, Discipline, Fédération, Site)
+    <input type="file" name="fichier" accept=".xlsx" required></label>
+  <button type="submit">Remplacer le référentiel</button>
+</form>
+{% endif %}
+{% for numero, libelle in categories.items() %}
+<section class="carte">
+  <h2>{{ numero }} – {{ libelle }}</h2>
+  <table class="compact">
+    <thead><tr><th>Discipline</th><th>Fédération</th><th>Adhérent CDOS 78</th></tr></thead>
+    <tbody>{% for f in federations if f.categorie | int == numero %}
+      <tr><td>{{ f.discipline }}</td><td>{% if f.site %}<a href="{{ f.site }}" target="_blank" rel="noopener">{{ f.federation }}</a>{% else %}{{ f.federation }}{% endif %}</td>
+        <td class="centre">{{ '✔' if f.discipline in utilisees }}</td></tr>
+    {% endfor %}</tbody>
+  </table>
+</section>
+{% endfor %}
+{% endblock %}

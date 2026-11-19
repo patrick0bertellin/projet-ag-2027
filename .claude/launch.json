@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "projet-ag-2027",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": [
+        "app.py"
+      ],
+      "port": 5010
+    }
+  ]
+}

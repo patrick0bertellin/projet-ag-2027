@@ -1,0 +1,78 @@
+{# Sondage de participation et présence le jour de l'AG : Chef de projet seulement.
+   Variables : suivi (synthese_sondage), actifs (comités avec _reponse), resume, libelles_reponses, date_ag. #}
+<section class="carte" id="sondage">
+  <h2>Sondage de participation et présence à l'AG <span class="discret">(Chef de projet)</span></h2>
+
+  <form method="post" action="{{ url_for('adherents.importer_sondage') }}" enctype="multipart/form-data" class="formulaire en-ligne">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <label>Réponses au sondage (fichier Excel du formulaire, .xlsx)
+      <input type="file" name="fichier" accept=".xlsx" required></label>
+    <button type="submit" class="secondaire">{{ 'Remplacer les réponses' if suivi.nb_lignes else 'Importer les réponses' }}</button>
+  </form>
+  <p class="discret">{% if suivi.nb_lignes %}{{ suivi.nb_lignes }} réponse(s) enregistrée(s).{% else %}Aucune réponse importée.{% endif %}
+    Chaque réponse est rattachée au comité par le nom de l'organisme ; la plus récente compte. Un nouvel import remplace les
+    réponses mais garde les rattachements faits à la main.</p>
+
+  <div class="tuiles compactes">
+    <div class="tuile"><div class="tuile-titre">Réponses</div>
+      <div class="tuile-valeur">{{ suivi.nb_reponses }} / {{ actifs | length }}</div>
+      <div class="tuile-detail">{{ suivi.sans_reponse | length }} comité(s) sans réponse</div></div>
+    <div class="tuile"><div class="tuile-titre">Présents (président)</div>
+      <div class="tuile-valeur">{{ suivi.par_type.present }}</div><div class="tuile-detail">{{ suivi.voix_par_type.present }} voix</div></div>
+    <div class="tuile"><div class="tuile-titre">Représentés</div>
+      <div class="tuile-valeur">{{ suivi.par_type.represente }}</div><div class="tuile-detail">{{ suivi.voix_par_type.represente }} voix</div></div>
+    <div class="tuile passe"><div class="tuile-titre">Absents</div>
+      <div class="tuile-valeur">{{ suivi.par_type.absent }}</div><div class="tuile-detail">sans représentant</div></div>
+  </div>
+
+  {% if suivi.non_rapprochees %}
+  <div class="alerte attention">
+    <strong>{{ suivi.non_rapprochees | length }} réponse(s) non rattachée(s) à un comité membre</strong> : choisir le comité
+    (ou laisser « non membre »).
+    <table class="compact">
+      {% for r in suivi.non_rapprochees %}
+      <tr><td>{{ r.organisme }}<br><span class="discret">{{ r.prenom }} {{ r.nom }} · {{ libelles_reponses[r._type] }} · {{ r.horodatage[:10] | date_courte }}</span></td>
+        <td><form method="post" action="{{ url_for('adherents.rapprocher_reponse') }}" class="en-ligne">
+          <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+          <input type="hidden" name="cle" value="{{ r.horodatage }}|{{ r.organisme | normaliser }}">
+          <select name="comite_id"><option value="">— non membre —</option>
+            {% for c in actifs %}<option value="{{ c.id }}">{{ c.nom }}</option>{% endfor %}</select>
+          <button type="submit" class="secondaire">Rattacher</button>
+        </form></td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('adherents.presence') }}" id="presence">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <h3>Réponses et émargement le jour de l'AG{% if date_ag %} ({{ date_ag | date_fr }}){% endif %}</h3>
+    <p class="{{ 'positif' if resume.quorum_constate else 'discret' }}">
+      Voix présentes (comités à jour) : <strong>{{ resume.voix_presentes }}</strong> pour un quorum de {{ resume.seuil }} :
+      {% if resume.quorum_constate %}<strong>quorum atteint ✔</strong>{% else %}il manque {{ resume.seuil - resume.voix_presentes }} voix.{% endif %}</p>
+    <div class="tableau-defilant">
+    <table>
+      <thead><tr><th>Organisme</th><th>Voix</th><th>Cotisation</th><th>Réponse au sondage</th><th>Qui vient</th><th>Présent à l'AG</th></tr></thead>
+      <tbody>
+      {% for c in actifs %}{% set r = c._reponse %}
+        <tr class="{{ '' if c._a_jour else 'en-attente' }}">
+          <td><a href="{{ url_for('adherents.fiche', identifiant=c.id) }}">{{ c.nom }}</a></td>
+          <td class="centre"><strong>{{ c._voix }}</strong></td>
+          <td class="centre">{% if c._a_jour %}<span class="statut s-fait">à jour</span>{% else %}<span class="statut s-bloqué">en attente</span>{% endif %}</td>
+          <td>{% if r %}<span class="reponse r-{{ r._type }}">{{ libelles_reponses[r._type] }}</span>
+                <br><span class="discret">le {{ r.horodatage[:10] | date_courte }}</span>
+              {% else %}<span class="discret">pas de réponse</span>{% endif %}</td>
+          <td>{% if r and r._type == 'represente' %}{{ r.rep_prenom }} {{ r.rep_nom }}{% if r.rep_fonction %} <span class="discret">({{ r.rep_fonction }})</span>{% endif %}
+                {% if r.rep_mail %}<br><a class="discret" href="mailto:{{ r.rep_mail }}">{{ r.rep_mail }}</a>{% endif %}
+              {% elif r and r._type == 'present' %}{{ r.prenom }} {{ r.nom }} <span class="discret">(président)</span>
+              {% else %}—{% endif %}</td>
+          <td class="centre"><label class="case"><input type="checkbox" name="presents" value="{{ c.id }}" {{ 'checked' if c._present }}>
+              présent</label>{% if c._present and not c._a_jour %}<br><span class="negatif">cotisation à régulariser à l'accueil</span>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <button type="submit">Enregistrer les présences</button>
+  </form>
+</section>

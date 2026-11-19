@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block titre %}{{ 'Nouvelle tâche' if creation else 'Tâche ' ~ t.id }}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{{ 'Nouvelle tâche' if creation else 'Tâche ' ~ t.id }}</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ retour }}">Retour</a></div>
+</div>
+
+{% if erreurs %}
+  <div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>
+{% endif %}
+
+{% if not creation %}
+<section class="carte">
+  <h2>{{ t.action }}</h2>
+  <dl class="fiche">
+    <dt>Phase</dt><dd>{{ t.phase }}</dd>
+    <dt>Échéance</dt><dd>{% if t._approx %}~ {% endif %}{{ t._date | date_fr }} <span class="discret">({{ t.echeance_texte }})</span></dd>
+    <dt>Responsables</dt><dd>{{ t.responsables or '—' }}</dd>
+    <dt>Catégorie</dt><dd>{{ t.categorie }}</dd>
+    <dt>Base statutaire</dt><dd>{{ t.base or '—' }}</dd>
+    {% if t.depend_de %}<dt>Dépend de</dt><dd>{{ t.depend_de }}</dd>{% endif %}
+    {% if t.maj_le %}<dt>Dernière mise à jour</dt><dd>{{ t.maj_le }} par {{ t.maj_par }}</dd>{% endif %}
+  </dl>
+</section>
+{% endif %}
+
+{% if peut_suivi %}
+<form method="post" class="carte formulaire" action="{{ url_for('retroplanning.nouvelle') if creation else url_for('retroplanning.tache', identifiant=t.id) }}">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+  <input type="hidden" name="retour" value="{{ retour }}">
+  <h2>Suivi</h2>
+  <div class="champs">
+    <label>Statut
+      <select name="statut">{% for s in statuts %}<option {{ 'selected' if valeurs.statut == s }}>{{ s }}</option>{% endfor %}</select>
+    </label>
+    <label>Avancement (%)
+      <input type="number" name="avancement" min="0" max="100" step="5" value="{{ valeurs.avancement }}">
+    </label>
+  </div>
+  <label>Commentaire <textarea name="commentaire" rows="3">{{ valeurs.commentaire }}</textarea></label>
+
+  {% if peut_gerer %}
+  <h2>Définition de la tâche <span class="discret">(Chef de projet)</span></h2>
+  <label>Action <textarea name="action" rows="2" required>{{ valeurs.action }}</textarea></label>
+  <div class="champs">
+    <label>Phase
+      <select name="phase">{% for p in listes.phases %}<option {{ 'selected' if valeurs.phase == p }}>{{ p }}</option>{% endfor %}
+        {% if valeurs.phase and valeurs.phase not in listes.phases %}<option selected>{{ valeurs.phase }}</option>{% endif %}</select>
+    </label>
+    <label>Catégorie
+      <select name="categorie">{% for c in listes.categories %}<option {{ 'selected' if valeurs.categorie == c }}>{{ c }}</option>{% endfor %}
+        {% if valeurs.categorie and valeurs.categorie not in listes.categories %}<option selected>{{ valeurs.categorie }}</option>{% endif %}</select>
+    </label>
+  </div>
+  <div class="champs">
+    <label>Date cible <input type="date" name="date_cible" value="{{ valeurs.date_cible }}" required></label>
+    <label>Échéance affichée (texte) <input type="text" name="echeance_texte" value="{{ valeurs.echeance_texte }}" placeholder="ex. Décembre 2026 ; vide = la date"></label>
+    <label class="case"><input type="checkbox" name="date_approx" value="oui" {{ 'checked' if valeurs.date_approx | booleen }}> Date approximative (~)</label>
+  </div>
+  <div class="champs">
+    <label>Responsables <input type="text" name="responsables" value="{{ valeurs.responsables }}" placeholder="Patrick, Louis"></label>
+    <label>Base statutaire <input type="text" name="base" value="{{ valeurs.base }}" placeholder="Art. 7 I"></label>
+  </div>
+  <div class="champs">
+    <label>Dépend de <input type="text" name="depend_de" value="{{ valeurs.depend_de }}" placeholder="T017, T018"></label>
+    <label>Poids dans l'avancement <input type="text" name="poids" value="{{ valeurs.poids }}" placeholder="1"></label>
+    <label class="case"><input type="checkbox" name="conditionnelle" value="oui" {{ 'checked' if valeurs.conditionnelle | booleen }}> Tâche conditionnelle (hors avancement)</label>
+  </div>
+  {% endif %}
+  <button type="submit">{{ 'Créer la tâche' if creation else 'Enregistrer' }}</button>
+</form>
+{% if peut_gerer and not creation %}
+<form method="post" action="{{ url_for('retroplanning.supprimer', identifiant=t.id) }}" class="suppression"
+      onsubmit="return confirm('Supprimer définitivement la tâche {{ t.id }} ?');">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+  <button type="submit" class="danger">Supprimer la tâche</button>
+</form>
+{% endif %}
+{% else %}
+<section class="carte">
+  <dl class="fiche">
+    <dt>Statut</dt><dd>{{ t.statut }}</dd><dt>Avancement</dt><dd>{{ t._avancement }} %</dd>
+    <dt>Commentaire</dt><dd>{{ t.commentaire or '—' }}</dd>
+  </dl>
+  <p class="discret">Vous n'êtes pas responsable de cette tâche : consultation seule.</p>
+</section>
+{% endif %}
+
+{% if historique %}
+<section class="carte">
+  <h2>Historique</h2>
+  <table class="compact">
+    <thead><tr><th>Quand</th><th>Qui</th><th>Champ</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr></thead>
+    <tbody>{% for h in historique %}<tr><td>{{ h.horodatage }}</td><td>{{ h.utilisateur }}</td><td>{{ h.champ }}</td><td>{{ h.ancienne }}</td><td>{{ h.nouvelle }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

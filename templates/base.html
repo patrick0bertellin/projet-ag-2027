@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titre %}{% endblock %} – Projet AG 2027 – CDOS 78</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo_cdos78.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ version }}">
+</head>
+<body>
+<header class="bandeau">
+  <div class="bandeau-haut">
+    <a class="marque" href="{{ url_for('tableau_de_bord.accueil') }}">
+      <img src="{{ url_for('static', filename='logo_cdos78.png') }}" alt="CDOS 78">
+      <span>Projet AG 2027</span>
+    </a>
+    <div class="bandeau-droite">
+      {% if compte and compte.id == 'visiteur' %}
+        <span class="utilisateur" title="Tableau de bord et rétroplanning, sans modification">{{ compte.nom }}</span>
+        <a href="{{ url_for('auth.aide') }}">Aide</a>
+        <a href="{{ url_for('auth.deconnexion') }}">Déconnexion</a>
+      {% elif compte %}
+        <span class="utilisateur" title="{{ mes_roles | join(', ') }}">{{ compte.nom }}</span>
+        <a href="{{ url_for('auth.aide') }}">Aide</a>
+        <a href="{{ url_for('auth.mot_de_passe') }}">Mot de passe</a>
+        <a href="{{ url_for('auth.deconnexion') }}">Se déconnecter</a>
+      {% endif %}
+      <span class="version" title="Version de l'application">v {{ version }}</span>
+    </div>
+  </div>
+  {% if compte %}
+  <nav class="onglets">
+    {% for cle, libelle, endpoint, roles in onglets %}
+      <a href="{{ url_for(endpoint) }}" class="{{ 'actif' if request.endpoint and request.endpoint.split('.')[0] == endpoint.split('.')[0] and (endpoint.split('.')[0] != 'a_venir' or request.endpoint == endpoint) }}">{{ libelle }}</a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+</header>
+
+<main>
+  {% if onglets_manquants %}
+    <div class="alerte attention">
+      Onglets absents du Google Sheet : {{ onglets_manquants | join(', ') }}.
+      Lancer <code>python init_sheet.py</code> ou l'import depuis les <a href="{{ url_for('parametres.accueil') }}">Paramètres</a>.
+    </div>
+  {% endif %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for categorie, message in messages %}
+      <div class="alerte {{ categorie }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block contenu %}{% endblock %}
+</main>
+<footer>CDOS 78 – Comité Départemental Olympique et Sportif des Yvelines · version {{ version }}</footer>
+</body>
+</html>

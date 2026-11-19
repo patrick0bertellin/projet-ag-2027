@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block titre %}Rapport d'activité{% endblock %}
+{% macro barre(n, total) %}{% set pct = ((100 * n / total) | round | int) if total else 0 %}
+  <div class="barre"><div class="barre-remplie" style="width: {{ pct }}%"></div><span>{{ n }}/{{ total }}</span></div>
+{% endmacro %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>Rapport d'activité 2026 – perspectives 2027</h1>
+  {% if peut_exporter %}
+  <div class="actions"><a class="bouton" href="{{ url_for('rapport.export') }}">Exporter le rapport compilé (Word)</a></div>
+  {% endif %}
+</div>
+
+<section class="carte">
+  <h2>Comment contribuer</h2>
+  <ol class="etapes">
+    <li>Chaque responsable ouvre la fiche de son pôle (clic sur son nom ci-dessous) : la commission et la présentation
+      reprises du rapport 2025 sont à relire.</li>
+    <li><strong>Bilan 2026</strong> : pour chaque engagement annoncé l'an dernier, choisir son état (Réalisé, En cours,
+      Reporté, Abandonné) et commenter ; ajouter les actions <strong>réalisées ou entamées sans avoir été prévues</strong> ;
+      renseigner les chiffres clés 2026.</li>
+    <li><strong>Perspectives 2027</strong> : rédiger les engagements de l'année à venir.</li>
+    <li><em>Enregistrer</em> garde la fiche en brouillon ; <em>Soumettre</em> la transmet au Chef de projet, qui la valide ou
+      la renvoie avec un commentaire. Remise au plus tard le <strong>vendredi 8 janvier 2027</strong>.</li>
+    <li>Ceux qui préfèrent Word peuvent remplir la trame envoyée le 23 novembre : le Chef de projet en reporte le contenu ici.</li>
+  </ol>
+</section>
+
+{% if sans_pole %}
+  <div class="alerte attention">Votre compte n'est rattaché à aucun pôle : demandez à l'administrateur de le préciser dans
+    votre compte.</div>
+{% endif %}
+
+<section class="carte">
+  <h2>Avancement des fiches</h2>
+  <div class="tableau-defilant">
+  <table>
+    <thead><tr><th>Fiche</th><th>Responsable</th><th>Statut</th><th>Engagements 2026 bilantés</th>
+      <th>Actions non prévues</th><th>Chiffres 2026 renseignés</th><th>Dernière mise à jour</th></tr></thead>
+    <tbody>
+    {% for p in poles %}
+      <tr>
+        <td><a href="{{ url_for('rapport.fiche', pole=p.pole) }}">{{ p.titre }}</a><div class="id">{{ p.pole }}</div></td>
+        <td>{{ p.responsable }}</td>
+        <td class="centre"><span class="statut s-{{ p.statut | replace(' ', '-') | lower }}">{{ p.statut }}</span></td>
+        <td>{{ barre(p.engagements_bilantes, p.engagements) }}</td>
+        <td class="centre">{{ p.non_prevues }}</td>
+        <td>{{ barre(p.indicateurs_renseignes, p.indicateurs) }}</td>
+        <td class="discret">{% if p.maj_le %}{{ p.maj_le }}<br>{{ p.maj_par }}{% endif %}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7" class="discret">Aucune fiche : les fiches de contribution n'ont pas encore été chargées.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}

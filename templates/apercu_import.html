@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block titre %}Aperçu de l'import{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>Aperçu de l'import</h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.importer') }}">Choisir un autre fichier</a></div>
+</div>
+<p class="sous-titre">{{ lecture.nom_fichier }} · {{ lecture.organismes | length }} organismes lus</p>
+
+<div class="tuiles">
+  <div class="tuile"><div class="tuile-titre">Nouveaux</div><div class="tuile-valeur">{{ nb.nouveau }}</div></div>
+  <div class="tuile"><div class="tuile-titre">Modifiés</div><div class="tuile-valeur">{{ nb.modifie + nb.reactive }}</div><div class="tuile-detail">{% if nb.reactive %}dont {{ nb.reactive }} réactivé(s){% endif %}</div></div>
+  <div class="tuile"><div class="tuile-titre">Absents du fichier</div><div class="tuile-valeur">{{ nb.absent }}</div><div class="tuile-detail">seront désactivés</div></div>
+  <div class="tuile passe"><div class="tuile-titre">Identiques</div><div class="tuile-valeur">{{ nb.identique }}</div></div>
+</div>
+
+{% with avant_import = true %}{% include "_alerte_synchro.html" %}{% endwith %}
+{% if lecture.anomalies %}
+  <div class="alerte attention"><strong>Remarques sur le fichier</strong><ul>{% for a in lecture.anomalies %}<li>{{ a }}</li>{% endfor %}</ul></div>
+{% endif %}
+
+<form method="post" class="carte formulaire">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+
+  {% if inconnus and candidats %}
+  <h2>Organismes non reconnus</h2>
+  <p class="discret">Nouveau comité, ou comité existant renommé ? Le choix est mémorisé pour les prochains imports.</p>
+  <table class="compact">
+    <thead><tr><th>Nom dans le fichier</th><th>Correspond à</th></tr></thead>
+    <tbody>
+    {% for o in inconnus %}
+      <tr><td>{{ o.nom }}</td><td>
+        <select name="choix_{{ o.cle }}">
+          <option value="nouveau">Nouveau comité</option>
+          {% for c in candidats %}<option value="{{ c.id }}" {{ 'selected' if choix[o.cle] == c.id }}>{{ c.nom }} ({{ c.id }})</option>{% endfor %}
+        </select>
+      </td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <button type="submit" name="action" value="recalculer" class="secondaire bouton">Recalculer l'aperçu</button>
+  {% endif %}
+
+  <h2>Opérations</h2>
+  <p class="discret">Décocher une ligne pour ne pas l'appliquer.</p>
+  <table>
+    <thead><tr><th></th><th>Organisme</th><th>Opération</th><th>Détail</th></tr></thead>
+    <tbody>
+    {% for op in operations if op.type != 'identique' %}
+      <tr class="op-{{ op.type }}">
+        <td class="centre"><input type="checkbox" name="operations" value="{{ op.cle }}" {{ 'checked' if op.cle in selection }}></td>
+        <td>{{ op.nom }}{% if op.comite_id %} <span class="id">{{ op.comite_id }}</span>{% endif %}
+          {% if op.nom_actuel and op.nom_actuel != op.nom %}<br><span class="discret">actuellement « {{ op.nom_actuel }} »</span>{% endif %}</td>
+        <td class="centre">{{ {'nouveau': '🟢 nouveau', 'modifie': '🟠 modifié', 'reactive': '🟠 réactivé', 'absent': '⚪ désactivé'}[op.type] }}</td>
+        <td>
+          {% if op.type == 'nouveau' %}
+            {% for champ, v in op.changements.items() if champ not in ('actif', 'nom') %}<span class="discret">{{ libelles.get(champ, champ) }} :</span> {{ v[1] }}{{ ' · ' if not loop.last }}{% endfor %}
+          {% elif op.type == 'absent' %}
+            absent du fichier : retiré du calcul des voix (historique conservé)
+          {% else %}
+            <ul class="changements">{% for champ, v in op.changements.items() %}
+              <li><span class="discret">{{ libelles.get(champ, champ) }} :</span> <del>{{ v[0] or 'vide' }}</del> → <strong>{{ v[1] or 'vide' }}</strong></li>{% endfor %}</ul>
+          {% endif %}
+          {% if op.anomalies %}<ul class="anomalies">{% for a in op.anomalies %}<li>⚠️ {{ a }}</li>{% endfor %}</ul>{% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="4" class="discret">Aucune différence avec les comités enregistrés.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% set identiques = operations | selectattr('type', 'equalto', 'identique') | selectattr('anomalies') | list %}
+  {% if identiques %}
+    <h3>Comités identiques, avec remarques</h3>
+    <ul class="anomalies">{% for op in identiques %}<li><strong>{{ op.nom }}</strong> : {{ op.anomalies | join(' ; ') }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if lecture.modele %}
+  <label class="case"><input type="checkbox" name="garder_modele" value="oui" checked>
+    Reprendre la mise en forme de ce fichier (couleurs, polices, filtres, mise en page, propriétés) pour les prochains exports</label>
+  {% else %}
+  <p class="discret">La disposition des colonnes de ce fichier n'est pas celle attendue : les exports garderont la mise en forme actuelle.</p>
+  {% endif %}
+  <button type="submit" name="action" value="appliquer">Appliquer les opérations cochées</button>
+</form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titre %}Connexion{% endblock %}
+{% block contenu %}
+<section class="carte etroite">
+  <h1>Connexion</h1>
+  {% if aucun_compte %}
+    <div class="alerte attention">Aucun compte n'existe encore : lancer <code>python init_sheet.py</code> pour créer le compte du Chef de projet.</div>
+  {% endif %}
+  <p class="consigne-connexion">Connectez-vous avec l'<strong>identifiant</strong> et le <strong>mot de passe</strong>
+    communiqués par l'administrateur de l'application.</p>
+  <form method="post">
+    <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+    <label>Identifiant <input type="text" name="identifiant" value="{{ identifiant }}" autofocus autocomplete="username" autocapitalize="none"></label>
+    <label>Mot de passe <input type="password" name="mot_de_passe" autocomplete="current-password"></label>
+    <div class="boutons-connexion">
+      <button type="submit">Se connecter</button>
+      <button type="submit" name="action" value="visiteur" class="secondaire">Consulter sans identifiant</button>
+    </div>
+  </form>
+  <p class="discret">Sans identifiant, vous accédez seulement au <strong>tableau de bord</strong> et au
+    <strong>rétroplanning</strong>, en consultation : aucune modification n'est possible.</p>
+</section>
+{% endblock %}

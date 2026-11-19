@@ -1,0 +1,23 @@
+{# Alerte : comités modifiés dans l'application depuis le dernier export/import Excel.
+   Variables : synchro (modifications_non_exportees), avant_import (booléen). #}
+{% if synchro and synchro.comites %}
+<div class="alerte attention alerte-synchro">
+  <strong>⚠️ {{ synchro.comites | length }} comité(s) mis à jour dans l'application depuis le dernier
+    {% if synchro.dernier %}{{ 'export' if synchro.dernier.id == 'export' else 'import' }} du fichier Excel
+      (le {{ synchro.dernier.horodatage[:10] | date_fr }} à {{ synchro.dernier.horodatage[11:16] }} par {{ synchro.dernier.utilisateur }}){% else %}export du fichier Excel{% endif %}.</strong>
+  {% if avant_import %}
+    Un import remplacera ces valeurs par celles du fichier : vérifiez-les dans l'aperçu (décochez les lignes à conserver)
+    ou <a href="{{ url_for('adherents.export') }}">exportez d'abord l'Excel</a> et repartez de ce fichier.
+  {% else %}
+    Le fichier Excel de référence n'est plus à jour :
+    <a class="bouton petit" href="{{ url_for('adherents.export') }}">Exporter l'Excel</a>
+  {% endif %}
+  <ul class="changements">
+    {% for m in synchro.comites[:10] %}
+      <li><a href="{{ url_for('adherents.fiche', identifiant=m.id) }}">{{ m.nom }}</a> –
+        {{ m.champs | join(', ') }} <span class="discret">({{ m.qui }}, {{ m.quand[:10] | date_courte }} {{ m.quand[11:16] }})</span></li>
+    {% endfor %}
+    {% if synchro.comites | length > 10 %}<li class="discret">… et {{ synchro.comites | length - 10 }} autre(s)</li>{% endif %}
+  </ul>
+</div>
+{% endif %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block titre %}Rétroplanning{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>Rétroplanning</h1>
+  <div class="actions">
+    <a class="bouton secondaire" href="{{ url_for('retroplanning.gantt') }}">Frise des jalons</a>
+    {% if peut_gerer %}<a class="bouton" href="{{ url_for('retroplanning.nouvelle') }}">Nouvelle tâche</a>{% endif %}
+  </div>
+</div>
+
+<div class="butoirs">
+  {% for b in butoirs %}<span class="butoir {{ 'ag' if b.cle == 'ag' }}"><strong>{{ b.libelle }}</strong> : {{ b.date | date_fr }}</span>{% endfor %}
+</div>
+
+{% if alertes %}
+<details class="alerte attention" {{ 'open' if alertes | selectattr('niveau', 'equalto', 'grave') | list }}>
+  <summary>Contrôles de cohérence : {{ alertes | length }} point(s) à vérifier</summary>
+  <ul>
+    {% for a in alertes %}
+      <li class="{{ a.niveau }}"><a href="{{ url_for('retroplanning.tache', identifiant=a.id) }}">{{ a.id }}</a> – {{ a.message }} <span class="discret">({{ a.action | truncate(70) }})</span></li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+<form class="filtres" method="get">
+  <select name="categorie"><option value="">Toutes les catégories</option>
+    {% for c in listes.categories %}<option {{ 'selected' if filtres.categorie == c }}>{{ c }}</option>{% endfor %}</select>
+  <select name="responsable"><option value="">Tous les responsables</option>
+    {% for r in responsables %}<option {{ 'selected' if filtres.responsable == r }}>{{ r }}</option>{% endfor %}</select>
+  <select name="statut"><option value="">Tous les statuts</option>
+    {% for s in listes.statuts %}<option {{ 'selected' if filtres.statut == s }}>{{ s }}</option>{% endfor %}</select>
+  <input type="search" name="q" value="{{ filtres.q }}" placeholder="Rechercher…">
+  <button type="submit">Filtrer</button>
+  {% if filtres.values() | select | list %}<a href="{{ url_for('retroplanning.liste') }}">Effacer</a>{% endif %}
+  <span class="discret">{{ nb }} tâche(s) sur {{ nb_total }}</span>
+</form>
+
+{% for phase, taches in groupes %}
+<section class="phase">
+  <h2>{{ phase }}</h2>
+  <div class="tableau-defilant">
+  <table class="taches">
+    <thead><tr>
+      <th class="col-date">Échéance</th><th>Action</th><th>Responsables</th><th>Base</th>
+      <th>Statut</th><th class="col-pct">Avanc.</th><th>Commentaire</th><th></th>
+    </tr></thead>
+    <tbody>
+    {% for t in taches %}
+      <tr class="{{ 'conditionnelle' if t._conditionnelle }}">
+        <td class="date" title="{{ t.echeance_texte }}">{% if t._approx %}<span class="approx" title="Date approximative : {{ t.echeance_texte }}">~</span> {% endif %}{{ t._date | date_fr }}</td>
+        <td><span class="id">{{ t.id }}</span> {{ t.action }}<br><span class="categorie">{{ t.categorie }}</span>{% if t._conditionnelle %} <span class="categorie">conditionnelle</span>{% endif %}</td>
+        <td>{{ t.responsables }}</td>
+        <td class="centre">{{ t.base }}</td>
+        <td class="centre"><span class="statut s-{{ t.statut | replace(' ', '-') | lower }}">{{ t.statut }}</span></td>
+        <td class="centre">{{ t._avancement }} %</td>
+        <td class="commentaire">{{ t.commentaire }}</td>
+        <td class="centre"><a href="{{ url_for('retroplanning.tache', identifiant=t.id) }}">{{ 'Modifier' if peut_modifier[t.id] else 'Voir' }}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% else %}
+<p class="discret">Aucune tâche ne correspond aux filtres.</p>
+{% endfor %}
+{% endblock %}

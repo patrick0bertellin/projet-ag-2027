@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block titre %}Tableau de bord{% endblock %}
+{% macro ligne_tache(t, classe="") %}
+  <tr class="{{ classe }}">
+    <td class="date">{% if t._approx %}~ {% endif %}{{ t._date | date_fr }}</td>
+    <td><a href="{{ url_for('retroplanning.tache', identifiant=t.id) }}">{{ t.id }}</a> – {{ t.action }}</td>
+    <td>{{ t.responsables }}</td>
+    <td class="centre"><span class="statut s-{{ t.statut | replace(' ', '-') | lower }}">{{ t.statut }}</span></td>
+  </tr>
+{% endmacro %}
+{% macro barre(pct) %}
+  <div class="barre"><div class="barre-remplie" style="width: {{ pct }}%"></div><span>{{ pct }} %</span></div>
+{% endmacro %}
+{% block contenu %}
+<h1>{{ projet.evenement }}</h1>
+<p class="sous-titre">{{ projet.date_ag | date_fr | capitalize }} – {{ projet.lieu }} · aujourd'hui : {{ aujourd_hui | date_fr }}</p>
+
+{% if mes_taches %}
+<section class="carte">
+  <h2>Mes tâches ({{ mes_taches | length }})</h2>
+  <table>
+    <thead><tr><th>Échéance</th><th>Action</th><th>Responsables</th><th>Statut</th></tr></thead>
+    <tbody>{% for t in mes_taches %}{{ ligne_tache(t, 'retard' if t._date and t._date < aujourd_hui else '') }}{% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}
+
+<div class="tuiles">
+  {% for r in rebours %}
+  <div class="tuile {{ 'passe' if r.passe }}">
+    <div class="tuile-titre">{{ r.libelle }}</div>
+    <div class="tuile-valeur">{{ r.texte }}</div>
+    <div class="tuile-detail">{{ r.date | date_fr }}{% if r.detail %}<br>{{ r.detail }}{% endif %}</div>
+  </div>
+  {% endfor %}
+  <div class="tuile">
+    <div class="tuile-titre">Avancement global</div>
+    <div class="tuile-valeur">{{ avancement }} %</div>
+    <div class="tuile-detail">{{ nb_taches }} tâches, hors tâches conditionnelles et sans objet</div>
+  </div>
+</div>
+
+<div class="grille-2">
+  <section class="carte">
+    <h2>Avancement par phase</h2>
+    {% for g in par_phase %}
+      <div class="ligne-barre"><span class="nom">{{ g.nom }}</span>{% if g.sans_calcul %}<span class="discret">conditionnelle</span>{% else %}{{ barre(g.avancement) }}{% endif %}</div>
+    {% endfor %}
+  </section>
+  <section class="carte">
+    <h2>Avancement par catégorie</h2>
+    {% for g in par_categorie %}
+      <div class="ligne-barre"><span class="nom">{{ g.nom }} <span class="discret">({{ g.nb_faites }}/{{ g.nb }})</span></span>{{ barre(g.avancement) }}</div>
+    {% endfor %}
+  </section>
+</div>
+
+<section class="carte">
+  <h2>Tâches en retard ({{ retard | length }})</h2>
+  {% if retard %}
+  <table>
+    <thead><tr><th>Échéance</th><th>Action</th><th>Responsables</th><th>Statut</th></tr></thead>
+    <tbody>{% for t in retard %}{{ ligne_tache(t, 'retard') }}{% endfor %}</tbody>
+  </table>
+  {% else %}<p class="discret">Aucune tâche en retard.</p>{% endif %}
+</section>
+
+<section class="carte">
+  <h2>Les 14 prochains jours ({{ a_venir | length }})</h2>
+  {% if a_venir %}
+  <table>
+    <thead><tr><th>Échéance</th><th>Action</th><th>Responsables</th><th>Statut</th></tr></thead>
+    <tbody>{% for t in a_venir %}{{ ligne_tache(t) }}{% endfor %}</tbody>
+  </table>
+  {% else %}<p class="discret">Aucune échéance dans les 14 prochains jours.</p>{% endif %}
+</section>
+
+<div class="grille-3">
+  <section class="carte">
+    <h2>Quorum</h2>
+    {% if quorum %}
+      {% set pct = (quorum.voix_inscrites / quorum.total_voix * 100) | round | int if quorum.total_voix else 0 %}
+      <div class="jauge"><div class="jauge-remplie {{ 'ok' if quorum.atteint }}" style="width: {{ [pct, 100] | min }}%"></div><div class="jauge-seuil" style="left: 50%"></div></div>
+      <p>{{ quorum.voix_inscrites }} voix inscrites sur {{ quorum.total_voix }} (seuil {{ quorum.seuil }}) ·
+         marge <strong class="{{ 'positif' if quorum.marge >= 0 else 'negatif' }}">{{ quorum.marge }}</strong></p>
+      <p class="discret">{{ quorum.nb_a_jour }} comités à jour sur {{ quorum.nb_comites }}{% if quorum.nb_en_attente %} ; {{ quorum.voix_en_attente }} voix en attente de paiement{% endif %}.
+        <a href="{{ url_for('adherents.liste') }}">Détail</a></p>
+    {% else %}
+      <p class="discret">Aucun comité : <a href="{{ url_for('adherents.importer') }}">importer le fichier Excel des adhérents</a>.</p>
+    {% endif %}
+  </section>
+  <section class="carte">
+    <h2>Budget</h2>
+    {% if budget %}
+      <table class="compact">
+        <tr><th>Prévu</th><td class="montant">{{ "{:,.2f}".format(budget.prevu).replace(",", " ").replace(".", ",") }} €</td></tr>
+        <tr><th>Engagé</th><td class="montant">{{ "{:,.2f}".format(budget.engage).replace(",", " ").replace(".", ",") }} €</td></tr>
+        <tr><th>Réalisé</th><td class="montant">{{ "{:,.2f}".format(budget.realise).replace(",", " ").replace(".", ",") }} €</td></tr>
+      </table>
+    {% else %}
+      <p class="discret">Aucune ligne budgétaire : le budget arrive au lot 2.</p>
+    {% endif %}
+  </section>
+  <section class="carte">
+    <h2>Rapport d'activité</h2>
+    <ul class="liste-etats">
+      {% for c in contributions %}<li><span>{{ c.pole }}</span><span class="statut s-{{ c.statut | replace(' ', '-') | lower }}">{{ c.statut }}</span></li>{% endfor %}
+    </ul>
+  </section>
+</div>
+
+<section class="carte">
+  <h2>Questions à trancher ({{ questions | length }})</h2>
+  {% if questions %}<ul>{% for q in questions %}<li>{{ q.question }}</li>{% endfor %}</ul>
+  {% else %}<p class="discret">Toutes les questions sont tranchées.</p>{% endif %}
+</section>
+{% endblock %}

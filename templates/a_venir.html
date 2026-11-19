@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block titre %}{{ titre }}{% endblock %}
+{% block contenu %}
+<h1>{{ titre }}</h1>
+<div class="alerte info">Cet écran sera réalisé au lot {{ lot }} : {{ contenu }}</div>
+{% if titre == "Communication" %}
+  <div class="alerte rappel">Règle de rédaction : seuls les comités sportifs départementaux des Yvelines à jour de leur cotisation <strong>à la date de l'AG</strong> votent.</div>
+{% endif %}
+{% if apercu %}
+  <h2>Données déjà chargées dans le Google Sheet</h2>
+  <ul>{% for ligne in apercu %}<li>{{ ligne }}</li>{% endfor %}</ul>
+{% endif %}
+{% endblock %}

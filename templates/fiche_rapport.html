@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block titre %}{{ fiche.titre or fiche.pole }}{% endblock %}
+{% block contenu %}
+{% set ro = 'disabled' if not modifiable %}
+<div class="entete-page">
+  <h1>{{ fiche.titre or fiche.pole }} <span class="id">{{ fiche.pole }}</span></h1>
+  <div class="actions"><a class="bouton secondaire" href="{{ url_for('rapport.liste') }}">Retour</a></div>
+</div>
+<p class="sous-titre">Responsable : {{ fiche.responsable }} ·
+  <span class="statut s-{{ fiche.statut | replace(' ', '-') | lower }}">{{ fiche.statut }}</span>
+  · remise au plus tard le {{ fiche.date_limite | date_fr }}</p>
+
+{% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+{% if fiche.commentaire_validation and fiche.statut == 'Brouillon' %}
+  <div class="alerte attention"><strong>À revoir (Chef de projet) :</strong> {{ fiche.commentaire_validation }}</div>
+{% endif %}
+{% if not modifiable %}
+  <div class="alerte info">{% if soumise %}Fiche soumise : elle attend la validation du Chef de projet et n'est plus
+    modifiable par le pôle.{% elif validee %}Fiche validée le {{ fiche.valide_le }} par {{ fiche.valide_par }}.{% else %}
+    Consultation seule.{% endif %}</div>
+{% endif %}
+
+<form method="post">
+  <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
+
+  {% if fiche.pole != 'Général' %}
+  <section class="carte formulaire">
+    <h2>Présentation du pôle</h2>
+    <p class="discret">Reprise du rapport 2025 : à relire et mettre à jour.</p>
+    <label>Commission (membres) <textarea name="commission" rows="3" {{ ro }}>{{ fiche.commission }}</textarea></label>
+    <label>Présentation <textarea name="presentation" rows="6" {{ ro }}>{{ fiche.presentation }}</textarea></label>
+  </section>
+  {% endif %}
+
+  <section class="carte">
+    <h2>Bilan 2026 – engagements annoncés dans le rapport 2025</h2>
+    {% if vue.engagements %}
+    <div class="tableau-defilant">
+    <table class="saisie-rapport">
+      <thead><tr><th>Engagement annoncé pour 2026</th><th class="col-etat">État fin 2026</th><th>Commentaire (ce qui a été fait, chiffres, raisons)</th></tr></thead>
+      <tbody>
+      {% for l in vue.engagements %}
+        <tr>
+          <td>{{ l.engagement }}</td>
+          <td><select name="etat_{{ l.id }}" {{ ro }}><option value="">— à préciser —</option>
+            {% for e in etats %}<option {{ 'selected' if l.etat == e }}>{{ e }}</option>{% endfor %}</select></td>
+          <td><textarea name="commentaire_{{ l.id }}" rows="2" {{ ro }}>{{ l.commentaire }}</textarea></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% else %}<p class="discret">Aucun engagement repris du rapport 2025 pour cette fiche.</p>{% endif %}
+  </section>
+
+  <section class="carte">
+    <h2>Réalisé ou entamé en 2026 sans avoir été prévu</h2>
+    <p class="discret">Actions nouvelles de l'année. Vider la description supprime la ligne.</p>
+    <div class="tableau-defilant">
+    <table class="saisie-rapport">
+      <thead><tr><th>Action</th><th class="col-etat">État</th><th>Commentaire</th></tr></thead>
+      <tbody>
+      {% set nb_existantes = vue.non_prevues | length %}
+      {% for l in vue.non_prevues %}
+        <tr>
+          <td><input type="hidden" name="np_id_{{ loop.index0 }}" value="{{ l.id }}">
+            <textarea name="np_texte_{{ loop.index0 }}" rows="2" {{ ro }}>{{ l.engagement }}</textarea></td>
+          <td><select name="np_etat_{{ loop.index0 }}" {{ ro }}><option value="">—</option>
+            {% for e in etats_non_prevu %}<option {{ 'selected' if l.etat == e }}>{{ e }}</option>{% endfor %}</select></td>
+          <td><textarea name="np_commentaire_{{ loop.index0 }}" rows="2" {{ ro }}>{{ l.commentaire }}</textarea></td>
+        </tr>
+      {% endfor %}
+      {% if modifiable %}
+      {% for n in range(nb_existantes, nb_existantes + nb_lignes_vides) %}
+        <tr class="ligne-libre">
+          <td><textarea name="np_texte_{{ n }}" rows="2" placeholder="Nouvelle action non prévue"></textarea></td>
+          <td><select name="np_etat_{{ n }}"><option value="">—</option>
+            {% for e in etats_non_prevu %}<option>{{ e }}</option>{% endfor %}</select></td>
+          <td><textarea name="np_commentaire_{{ n }}" rows="2"></textarea></td>
+        </tr>
+      {% endfor %}
+      {% endif %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="carte">
+    <h2>Chiffres clés</h2>
+    <div class="tableau-defilant">
+    <table class="saisie-rapport">
+      <thead><tr><th>Indicateur</th><th>Valeur 2025</th><th>Valeur 2026</th><th>Source</th></tr></thead>
+      <tbody>
+      {% for l in vue.indicateurs %}
+        <tr>
+          <td>{% if l.id.startswith('A') %}<input type="text" name="nom_{{ l.id }}" value="{{ l.indicateur }}" {{ ro }}>
+            {% else %}{{ l.indicateur }}{% endif %}</td>
+          <td class="centre">{{ l.valeur_reference }}</td>
+          <td><input type="text" name="valeur_{{ l.id }}" value="{{ l.valeur_annee }}" {{ ro }}></td>
+          <td><input type="text" name="source_{{ l.id }}" value="{{ l.source }}" {{ ro }}></td>
+        </tr>
+      {% endfor %}
+      {% if modifiable %}
+      {% for n in range(nb_lignes_vides) %}
+        <tr class="ligne-libre">
+          <td><input type="text" name="ni_nom_{{ n }}" placeholder="Nouvel indicateur"></td>
+          <td><input type="text" name="ni_reference_{{ n }}" placeholder="si connue"></td>
+          <td><input type="text" name="ni_valeur_{{ n }}"></td>
+          <td><input type="text" name="ni_source_{{ n }}"></td>
+        </tr>
+      {% endfor %}
+      {% endif %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="carte formulaire">
+    <h2>{{ 'Introduction et bilan général 2026' if fiche.pole == 'Général' else 'Actions menées en 2026 (texte libre)' }}</h2>
+    <textarea name="bilan" rows="10" {{ ro }}>{{ fiche.bilan }}</textarea>
+    <h2>{{ 'Perspectives générales 2027' if fiche.pole == 'Général' else 'Perspectives 2027' }}</h2>
+    <p class="discret">Un engagement par ligne : ils serviront de base au bilan de l'an prochain.</p>
+    <textarea name="perspectives" rows="8" {{ ro }}>{{ fiche.perspectives }}</textarea>
+  </section>
+
+  <section class="carte">
+    {% if modifiable %}
+      <div class="actions">
+        <button type="submit" name="action" value="enregistrer" class="secondaire">Enregistrer (brouillon)</button>
+        {% if fiche.statut in ('Non commencée', 'Brouillon') %}
+        <button type="submit" name="action" value="soumettre"
+                onclick="return confirm('Soumettre la fiche au Chef de projet ? Elle ne sera plus modifiable par le pôle.')">Soumettre au Chef de projet</button>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if peut_valider and fiche.statut in ('Soumise', 'Validée') %}
+      <h2>Validation (Chef de projet)</h2>
+      <label>Commentaire pour le responsable (obligatoire pour renvoyer)
+        <textarea name="commentaire_validation" rows="2">{{ commentaire_validation }}</textarea></label>
+      <div class="actions">
+        {% if fiche.statut == 'Soumise' %}<button type="submit" name="action" value="valider">Valider la fiche</button>{% endif %}
+        <button type="submit" name="action" value="renvoyer" class="secondaire">Renvoyer en brouillon</button>
+      </div>
+    {% endif %}
+  </section>
+</form>
+
+{% if historique %}
+<section class="carte">
+  <h2>Dernières modifications</h2>
+  <table class="compact">
+    <thead><tr><th>Quand</th><th>Qui</th><th>Champ</th><th>Nouvelle valeur</th></tr></thead>
+    <tbody>{% for h in historique %}<tr><td class="date">{{ h.horodatage }}</td><td>{{ h.utilisateur }}</td><td>{{ h.champ }}</td>
+      <td class="commentaire">{{ h.nouvelle | truncate(120) }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}
