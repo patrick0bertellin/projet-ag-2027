@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 {% block titre %}Rétroplanning{% endblock %}
 {% block contenu %}
-<div class="entete-page">
-  <h1>Rétroplanning</h1>
-  <div class="actions">
-    <a class="bouton secondaire" href="{{ url_for('retroplanning.gantt') }}">Frise des jalons</a>
-    {% if peut_gerer %}<a class="bouton" href="{{ url_for('retroplanning.nouvelle') }}">Nouvelle tâche</a>{% endif %}
-  </div>
-</div>
+<h1>Rétroplanning</h1>
+<p class="sous-titre">Tâches de préparation de l'Assemblée générale, par phase{% if vue == 'retard' %} : tâches en retard{% elif vue == 'miennes' %} : tâches dont vous êtes responsable{% endif %}.</p>
+{% include "_onglets_retroplanning.html" %}
 
 <div class="butoirs">
   {% for b in butoirs %}<span class="butoir {{ 'ag' if b.cle == 'ag' }}"><strong>{{ b.libelle }}</strong> : {{ b.date | date_fr }}</span>{% endfor %}
@@ -25,6 +21,7 @@
 {% endif %}
 
 <form class="filtres" method="get">
+  {% if vue %}<input type="hidden" name="vue" value="{{ vue }}">{% endif %}
   <select name="categorie"><option value="">Toutes les catégories</option>
     {% for c in listes.categories %}<option {{ 'selected' if filtres.categorie == c }}>{{ c }}</option>{% endfor %}</select>
   <select name="responsable"><option value="">Tous les responsables</option>
@@ -33,7 +30,7 @@
     {% for s in listes.statuts %}<option {{ 'selected' if filtres.statut == s }}>{{ s }}</option>{% endfor %}</select>
   <input type="search" name="q" value="{{ filtres.q }}" placeholder="Rechercher…">
   <button type="submit">Filtrer</button>
-  {% if filtres.values() | select | list %}<a href="{{ url_for('retroplanning.liste') }}">Effacer</a>{% endif %}
+  {% if filtres.values() | select | list %}<a href="{{ url_for('retroplanning.liste', vue=vue or None) }}">Effacer</a>{% endif %}
   <span class="discret">{{ nb }} tâche(s) sur {{ nb_total }}</span>
 </form>
 

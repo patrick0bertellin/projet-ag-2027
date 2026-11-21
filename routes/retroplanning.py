@@ -6,11 +6,11 @@ from flask import Blueprint, abort, flash, g, redirect, render_template, request
 
 from metier import decimal, entier
 from metier.dates import aujourd_hui, date_fr, horodatage, lire_date, mois_fr
-from metier.droits import peut_gerer_taches, peut_modifier_suivi
+from metier.droits import est_responsable, est_visiteur, peut_gerer_taches, peut_modifier_suivi
 from metier.journal import differences, historique, tracer
 from metier.projet import STATUTS_TACHE, butoirs, lire_listes, lire_projet
 from metier.taches import (
-    controles_coherence, filtrer, grouper_par_phase, lire_taches, nouvel_identifiant,
+    controles_coherence, en_retard, filtrer, grouper_par_phase, lire_taches, nouvel_identifiant,
     tous_les_responsables,
 )
 from routes import nom_utilisateur, stockage
@@ -30,12 +30,20 @@ def liste():
     toutes = lire_taches(st)
     filtres = {c: request.args.get(c, "").strip() for c in ("categorie", "responsable", "statut", "q")}
     taches = filtrer(toutes, filtres["categorie"], filtres["responsable"], filtres["statut"], filtres["q"])
+    vue = request.args.get("vue", "")
+    if vue == "retard":
+        taches = en_retard(taches, aujourd_hui())
+    elif vue == "miennes" and not est_visiteur(g.compte):
+        taches = [t for t in taches if est_responsable(g.compte, t)]
+    else:
+        vue = ""
     return render_template(
         "retroplanning.html",
         groupes=grouper_par_phase(taches, listes["phases"]),
         nb=len(taches),
         nb_total=len(toutes),
         filtres=filtres,
+        vue=vue,
         listes=listes,
         responsables=tous_les_responsables(toutes),
         alertes=controles_coherence(toutes, projet),

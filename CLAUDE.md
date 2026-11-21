@@ -18,13 +18,17 @@ Instructions permanentes pour Claude Code dans ce dépôt.
 - Poser une question à Patrick plutôt que deviner quand une règle de gestion n'est pas dans le cahier des charges.
 
 ## Conventions techniques
-- Python 3.12, Flask, gunicorn, gspread + google-auth, werkzeug pour le hachage des mots de passe, python-docx pour les exports Word, pytest.
+- Python 3.12, Flask, gunicorn, gspread + google-auth, python-docx pour les exports Word, pytest.
+- Mots de passe : enregistrés **en clair** et lisibles par le Chef de projet, comme dans l'application Éclats 2027 (choix de Patrick du 21/11/2026) ; les anciens mots de passe hachés (werkzeug) restent acceptés. Ne jamais écrire un mot de passe dans le Journal.
 - Google Sheet comme base de données ; onglets lus **par leur nom**, jamais par leur position ; lecture tolérante si un onglet manque (message clair, pas de 500).
 - Le compte de service ne peut pas créer de fichier Drive : le Sheet est créé par Patrick puis partagé avec le compte de service.
 - Configuration par variables d'environnement : `SECRET_KEY`, `SHEET_ID`, `SERVICE_ACCOUNT_JSON` (contenu JSON) ou `GOOGLE_APPLICATION_CREDENTIALS` (chemin local).
 - `version.txt` au format `aaaammjj-hhmm` en heure de Paris (Europe/Paris), régénéré à chaque livraison, affiché dans le bandeau.
 - En cas d'erreur de saisie dans un formulaire : réafficher la page avec les valeurs saisies et le message, ne pas rediriger en vidant les champs.
 - Dates affichées au format français (« lundi 15 février 2027 »).
+
+## Présentation
+- Chaque rubrique du bandeau a des sous-onglets (`nav.sous-onglets`, partials `_onglets_*.html`), comme l'application Éclats 2027.
 
 ## Charte graphique CDOS 78
 - Logo : `static/logo_cdos78.png`.

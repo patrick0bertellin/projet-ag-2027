@@ -39,7 +39,7 @@ ONGLETS = {
     "Questions": ["id", "question", "etat", "decision", "date_decision"],
     "Reference": ["type", "ordre", "titre", "texte", "complement", "complement2"],
     "Comptes": [
-        "id", "identifiant", "nom", "alias", "courriel", "roles", "pole", "mdp_hash", "actif",
+        "id", "identifiant", "nom", "alias", "courriel", "roles", "pole", "mot_de_passe", "mdp_hash", "actif",
         "doit_changer_mdp", "cree_le",
     ],
     "Journal": ["horodatage", "utilisateur", "onglet", "id", "champ", "ancienne", "nouvelle"],

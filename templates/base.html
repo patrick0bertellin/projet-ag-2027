@@ -41,7 +41,7 @@
   {% if onglets_manquants %}
     <div class="alerte attention">
       Onglets absents du Google Sheet : {{ onglets_manquants | join(', ') }}.
-      Lancer <code>python init_sheet.py</code> ou l'import depuis les <a href="{{ url_for('parametres.accueil') }}">Paramètres</a>.
+      Lancer <code>python init_sheet.py</code> ou l'import depuis les <a href="{{ url_for('parametres.accueil', section='import') }}">Paramètres</a>.
     </div>
   {% endif %}
   {% with messages = get_flashed_messages(with_categories=true) %}

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block titre %}Aperçu de l'import{% endblock %}
 {% block contenu %}
+{% include "_onglets_adherents.html" %}
 <div class="entete-page">
-  <h1>Aperçu de l'import</h1>
+  <h2>Aperçu de l'import</h2>
   <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.importer') }}">Choisir un autre fichier</a></div>
 </div>
 <p class="sous-titre">{{ lecture.nom_fichier }} · {{ lecture.organismes | length }} organismes lus</p>

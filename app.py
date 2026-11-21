@@ -11,7 +11,9 @@ from metier import booleen
 from metier.comptes import trouver
 from metier.dates import date_courte, date_fr, horodatage
 from metier.adherents import normaliser_nom
-from metier.droits import COMPTE_VISITEUR, ROLES, est_chef, est_visiteur, onglets_visibles, roles_du_compte
+from metier.droits import (
+    COMPTE_VISITEUR, ROLES, est_chef, est_visiteur, onglets_visibles, peut_gerer_adherents, roles_du_compte,
+)
 from stockage import StockageIndisponible
 
 journal = logging.getLogger(__name__)
@@ -114,6 +116,7 @@ def create_app(config=None, stockage=None):
             "libelles_roles": ROLES,
             "mes_roles": [ROLES[r] for r in ROLES if r in roles_du_compte(g.get("compte"))],
             "onglets_manquants": manquants,
+            "gere_adherents": peut_gerer_adherents(g.get("compte")),
             "jeton_csrf": session["jeton_csrf"],
         }
 

@@ -1,0 +1,8 @@
+{# Sous-onglets de la rubrique Comptes #}
+{% set ep = request.endpoint or '' %}
+<h1>Comptes</h1>
+<p class="sous-titre">Comptes de connexion de l'équipe, rôles et mots de passe. Réservé au Chef de projet.</p>
+<nav class="sous-onglets">
+  <a href="{{ url_for('comptes.liste') }}" class="{{ 'actif' if ep in ('comptes.liste', 'comptes.modifier') }}">Comptes</a>
+  <a href="{{ url_for('comptes.nouveau') }}" class="{{ 'actif' if ep == 'comptes.nouveau' }}">Nouveau compte</a>
+</nav>

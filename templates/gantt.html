@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% block titre %}Frise des jalons{% endblock %}
 {% block contenu %}
-<div class="entete-page">
-  <h1>Frise des jalons</h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ url_for('retroplanning.liste') }}">Retour à la liste</a></div>
-</div>
+<h1>Rétroplanning</h1>
+<p class="sous-titre">Frise des jalons : les échéances de la préparation de l'AG sur une ligne de temps.</p>
+{% include "_onglets_retroplanning.html" %}
 {% if vide %}
   <p class="discret">Aucune tâche datée.</p>
 {% else %}

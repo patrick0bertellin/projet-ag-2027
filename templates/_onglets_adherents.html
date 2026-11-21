@@ -1,0 +1,12 @@
+{# Sous-onglets de la rubrique Adhérents #}
+{% set ep = request.endpoint or '' %}
+<h1>Adhérents</h1>
+<p class="sous-titre">{{ sous_titre_adherents | default("Comités sportifs départementaux membres du CDOS 78, voix et quorum de l'Assemblée générale.") }}</p>
+<nav class="sous-onglets">
+  <a href="{{ url_for('adherents.liste') }}" class="{{ 'actif' if ep == 'adherents.liste' or (ep == 'adherents.fiche') }}">Comités membres</a>
+  {% if gere_adherents %}
+  <a href="{{ url_for('adherents.nouveau') }}" class="{{ 'actif' if ep == 'adherents.nouveau' }}">Nouvel adhérent</a>
+  <a href="{{ url_for('adherents.importer') }}" class="{{ 'actif' if ep in ('adherents.importer', 'adherents.apercu') }}">Import Excel</a>
+  {% endif %}
+  <a href="{{ url_for('adherents.referentiel') }}" class="{{ 'actif' if ep == 'adherents.referentiel' }}">Référentiel CNOSF</a>
+</nav>

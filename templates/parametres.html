@@ -5,7 +5,14 @@
 {% endmacro %}
 {% block contenu %}
 <h1>Paramètres</h1>
+<p class="sous-titre">Réglages du projet : l'Assemblée générale, les listes, le barème des voix et l'import initial. Réservé au Chef de projet.</p>
+<nav class="sous-onglets">
+  {% for cle, libelle in sections.items() %}
+  <a href="{{ url_for('parametres.accueil', section=cle) }}" class="{{ 'actif' if section == cle }}">{{ libelle }}</a>
+  {% endfor %}
+</nav>
 
+{% if section == "projet" %}
 <section class="carte" id="projet">
   <h2>Projet</h2>
   {{ erreurs_section('projet') }}
@@ -32,7 +39,9 @@
     <tbody>{% for b in butoirs %}<tr class="{{ 'ag' if b.cle == 'ag' }}"><td>{{ b.libelle }}</td><td>{{ b.date | date_fr }}</td></tr>{% endfor %}</tbody>
   </table>
 </section>
+{% endif %}
 
+{% if section == "listes" %}
 <section class="carte" id="listes">
   <h2>Listes</h2>
   <p class="discret">Une valeur par ligne. Les statuts des tâches sont fixes (les calculs en dépendent).</p>
@@ -49,7 +58,9 @@
     <button type="submit">Enregistrer les listes</button>
   </form>
 </section>
+{% endif %}
 
+{% if section == "bareme" %}
 <section class="carte" id="bareme">
   <h2>Barème des voix</h2>
   <p class="discret">Bonus selon les licenciés : chaque ligne « licenciés à partir de ; voix en plus ». Barème actuel : +1 de 1 à 2 000, +2 de 2 001 à 10 000, +3 au-delà.</p>
@@ -65,7 +76,9 @@
     <button type="submit">Enregistrer le barème</button>
   </form>
 </section>
+{% endif %}
 
+{% if section == "import" %}
 <section class="carte" id="import">
   <h2>Import des données de la v05</h2>
   <p>Recharge <code>donnees/projet_ag_2027.json</code> dans le Google Sheet : tâches, calendrier de communication,
@@ -82,4 +95,5 @@
     <button type="submit">Importer</button>
   </form>
 </section>
+{% endif %}
 {% endblock %}

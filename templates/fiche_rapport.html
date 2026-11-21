@@ -2,10 +2,8 @@
 {% block titre %}{{ fiche.titre or fiche.pole }}{% endblock %}
 {% block contenu %}
 {% set ro = 'disabled' if not modifiable %}
-<div class="entete-page">
-  <h1>{{ fiche.titre or fiche.pole }} <span class="id">{{ fiche.pole }}</span></h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ url_for('rapport.liste') }}">Retour</a></div>
-</div>
+{% include "_onglets_rapport.html" %}
+<h2>{{ fiche.titre or fiche.pole }}</h2>
 <p class="sous-titre">Responsable : {{ fiche.responsable }} ·
   <span class="statut s-{{ fiche.statut | replace(' ', '-') | lower }}">{{ fiche.statut }}</span>
   · remise au plus tard le {{ fiche.date_limite | date_fr }}</p>

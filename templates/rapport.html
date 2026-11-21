@@ -4,12 +4,10 @@
   <div class="barre"><div class="barre-remplie" style="width: {{ pct }}%"></div><span>{{ n }}/{{ total }}</span></div>
 {% endmacro %}
 {% block contenu %}
-<div class="entete-page">
-  <h1>Rapport d'activité 2026 – perspectives 2027</h1>
-  {% if peut_exporter %}
-  <div class="actions"><a class="bouton" href="{{ url_for('rapport.export') }}">Exporter le rapport compilé (Word)</a></div>
-  {% endif %}
-</div>
+{% include "_onglets_rapport.html" %}
+{% if peut_exporter %}
+<div class="actions barre-actions"><a class="bouton" href="{{ url_for('rapport.export') }}">Exporter le rapport compilé (Word)</a></div>
+{% endif %}
 
 <section class="carte">
   <h2>Comment contribuer</h2>

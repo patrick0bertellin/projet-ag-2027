@@ -243,3 +243,17 @@ table.saisie-rapport textarea, table.saisie-rapport input, table.saisie-rapport 
 table.saisie-rapport .col-etat { width: 150px; }
 tr.ligne-libre td { background: #fafbff; }
 ol.etapes li { margin-bottom: 6px; }
+
+/* Sous-onglets d'une rubrique (présentation de l'application Éclats 2027) */
+.sous-onglets { display: flex; gap: 6px; border-bottom: 3px solid var(--bleu); margin: 0 0 14px; flex-wrap: wrap; }
+.sous-onglets a { padding: 9px 18px; text-decoration: none; color: #1F3864; border: 2px solid var(--bleu); border-bottom: 0;
+                  border-radius: 8px 8px 0 0; background: #DCE4F2; font-weight: 700; font-size: 15px; }
+.sous-onglets a:hover { background: #C5D3EC; }
+.sous-onglets a.actif { background: var(--bleu); color: #fff; }
+.sous-onglets a:not(.actif)::after { content: " ›"; opacity: .6; }
+.sous-onglets + .entete-page h2 { margin: 4px 0 8px; }
+@media (max-width: 700px) { .sous-onglets a { padding: 7px 10px; font-size: 14px; } }
+.barre-actions { margin: -4px 0 12px; justify-content: flex-end; }
+.bouton-lien { background: none; border: 0; padding: 0 4px; color: var(--bleu); text-decoration: underline; cursor: pointer; font-size: 13px; }
+td.mdp { white-space: nowrap; }
+.mdp-masque { font-family: Consolas, monospace; }

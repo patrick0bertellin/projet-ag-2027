@@ -35,7 +35,7 @@ def test_compte_desactive_refuse(client, stockage):
 
 
 def test_changement_de_mot_de_passe_obligatoire(client, stockage):
-    creer(stockage, "nouveau", "Nouveau", ["lecture"], "initial-123")
+    creer(stockage, "nouveau", "Nouveau", ["lecture"], "initial-123", doit_changer=True)
     client.post("/connexion", data={"identifiant": "nouveau", "mot_de_passe": "initial-123"})
     reponse = client.get("/retroplanning/")
     assert reponse.status_code == 302 and "/mot-de-passe" in reponse.headers["Location"]
@@ -181,8 +181,8 @@ def test_comptes_creation_et_modification(connexion, stockage):
     client.post("/comptes/nouveau", data={"identifiant": "marion", "nom": "Marion Lebel", "alias": "Marion Lebel",
                                           "roles": ["communication"], "mot_de_passe": "provisoire1", "actif": "oui"})
     marion = trouver_par_identifiant(stockage, "marion")
-    assert marion["roles"] == "communication" and marion["doit_changer_mdp"] == "oui"
-    assert marion["mdp_hash"] and "provisoire1" not in marion["mdp_hash"]
+    assert marion["roles"] == "communication" and marion["doit_changer_mdp"] == "non"
+    assert marion["mot_de_passe"] == "provisoire1" and not marion["mdp_hash"]  # lisible, comme Éclats 2027
     client.post(f"/comptes/{marion['id']}", data={"identifiant": "marion", "nom": "Marion Lebel",
                                                    "alias": "Marion Lebel", "roles": ["communication"]})
     assert trouver_par_identifiant(stockage, "marion")["actif"] == "non"
@@ -288,3 +288,56 @@ def test_aide_des_comptes_connectes(connexion):
     page = connexion("chef").get("/aide").get_data(as_text=True)
     assert "Visiteur</strong> (sans identifiant)" in page and "Sondage de participation" in page
     assert "Sondage de participation" not in connexion("lecture").get("/aide").get_data(as_text=True)
+
+
+def test_mots_de_passe_lisibles_et_anciens_chiffres(connexion, stockage, client):
+    from werkzeug.security import generate_password_hash
+    from metier.comptes import verifier_connexion
+
+    # ancien compte au mot de passe chiffré : toujours valable, affiché « non lisible »
+    ancien = creer(stockage, "ancien", "Ancien Compte", ["lecture"], "x")
+    stockage.mettre_a_jour("Comptes", "id", ancien["id"], {"mot_de_passe": "", "mdp_hash": generate_password_hash("chiffre-123")})
+    assert verifier_connexion(stockage, "ancien", "chiffre-123") and not verifier_connexion(stockage, "ancien", "x")
+    # mot de passe tapé en clair dans le Google Sheet : accepté tel quel
+    stockage.mettre_a_jour("Comptes", "id", ancien["id"], {"mot_de_passe": "tape-dans-le-sheet"})
+    assert verifier_connexion(stockage, "ancien", "tape-dans-le-sheet")
+    stockage.mettre_a_jour("Comptes", "id", ancien["id"], {"mot_de_passe": ""})
+
+    chef = connexion("chef")
+    page = texte(chef.get("/comptes/"))
+    assert 'data-mdp="motdepasse-test"' in page and "non lisible" in page
+    assert 'value="motdepasse-test"' in texte(chef.get(f"/comptes/{trouver_par_identifiant(stockage, 'pierre')['id']}"))
+    # nouveau mot de passe saisi par le chef : lisible, jamais écrit dans le journal
+    chef.post(f"/comptes/{ancien['id']}", data={"identifiant": "ancien", "nom": "Ancien Compte", "roles": ["lecture"],
+                                                "mot_de_passe": "nouveau-789", "actif": "oui"})
+    compte = trouver_par_identifiant(stockage, "ancien")
+    assert compte["mot_de_passe"] == "nouveau-789" and not compte["mdp_hash"]
+    assert not any("nouveau-789" in (l.get("nouvelle", "") + l.get("ancienne", "")) for l in stockage.lire("Journal"))
+    # les autres rôles ne voient pas la page des comptes
+    client.get("/deconnexion")
+    assert connexion("lecture").get("/comptes/").status_code == 403
+
+
+def test_sous_onglets_des_rubriques(connexion):
+    chef = connexion("chef")
+    for url, attendus in [
+        ("/retroplanning/", ["Toutes les tâches", "En retard", "Frise des jalons", "Nouvelle tâche"]),
+        ("/adherents/", ["Comités membres", "Import Excel", "Référentiel CNOSF"]),
+        ("/rapport/", ["Avancement des fiches"]),
+        ("/parametres/?section=bareme", ["Projet", "Listes", "Barème des voix"]),
+        ("/comptes/", ["Comptes", "Nouveau compte"]),
+    ]:
+        page = texte(chef.get(url))
+        nav = page.split('<nav class="sous-onglets">')[1].split("</nav>")[0]
+        assert all(a in nav for a in attendus), url
+        assert nav.count('class="actif"') == 1, url
+    retard = texte(chef.get("/retroplanning/?vue=retard"))
+    assert "tâches en retard" in retard
+
+
+def test_sous_onglets_du_visiteur(client):
+    client.post("/connexion", data={"action": "visiteur"})
+    nav = texte(client.get("/retroplanning/")).split('<nav class="sous-onglets">')[1].split("</nav>")[0]
+    assert "Mes tâches" not in nav and "Nouvelle tâche" not in nav
+    nav = texte(client.get("/adherents/")).split('<nav class="sous-onglets">')[1].split("</nav>")[0]
+    assert "Import Excel" not in nav and "Référentiel CNOSF" in nav

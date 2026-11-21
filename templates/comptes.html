@@ -1,25 +1,40 @@
 {% extends "base.html" %}
 {% block titre %}Comptes{% endblock %}
 {% block contenu %}
-<div class="entete-page">
-  <h1>Comptes</h1>
-  <div class="actions"><a class="bouton" href="{{ url_for('comptes.nouveau') }}">Nouveau compte</a></div>
-</div>
+{% include "_onglets_comptes.html" %}
+<div class="tableau-defilant">
 <table>
-  <thead><tr><th>Identifiant</th><th>Nom</th><th>Alias</th><th>Courriel</th><th>Rôles</th><th>Pôle</th><th>Actif</th><th>1re connexion</th><th></th></tr></thead>
+  <thead><tr><th>Identifiant</th><th>Nom</th><th>Alias</th><th>Courriel</th><th>Rôles</th><th>Pôle</th><th>Mot de passe</th><th>Actif</th><th></th></tr></thead>
   <tbody>
   {% for c in comptes %}
     <tr class="{{ '' if c.actif | booleen else 'inactif' }}">
       <td>{{ c.identifiant }}</td><td>{{ c.nom }}</td><td>{{ c.alias }}</td><td>{{ c.courriel }}</td>
       <td>{% for r in c.roles.split(',') if r in roles %}<span class="categorie">{{ roles[r] }}</span> {% endfor %}</td>
       <td>{{ c.pole }}</td>
+      <td class="mdp">
+        {% if c._etat_mdp == 'aucun' %}<span class="discret">aucun</span>
+        {% elif c._etat_mdp == 'chiffré' %}<span class="discret" title="Ancien mot de passe chiffré : en saisir un nouveau pour pouvoir l'afficher">non lisible</span>
+        {% else %}<span class="mdp-masque" data-mdp="{{ c._mdp }}">••••••</span>
+          <button type="button" class="bouton-lien" onclick="basculerMdp(this)">Afficher</button>{% endif %}
+        {% if c.doit_changer_mdp | booleen %}<div class="discret">à changer à la 1re connexion</div>{% endif %}
+      </td>
       <td class="centre">{{ 'oui' if c.actif | booleen else 'non' }}</td>
-      <td class="centre">{{ 'à faire' if c.doit_changer_mdp | booleen else 'faite' }}</td>
-      <td class="centre"><a href="{{ url_for('comptes.modifier', identifiant=c.id) }}">Modifier</a></td>
+      <td class="centre"><a class="bouton secondaire petit" href="{{ url_for('comptes.modifier', identifiant=c.id) }}">Modifier</a></td>
     </tr>
   {% else %}
     <tr><td colspan="9" class="discret">Aucun compte.</td></tr>
   {% endfor %}
   </tbody>
 </table>
+</div>
+<p class="discret">Les mots de passe sont lisibles par le Chef de projet pour pouvoir les communiquer ; ils figurent aussi en
+  clair dans l'onglet Comptes du Google Sheet : n'en partagez l'accès qu'avec des personnes de confiance.</p>
+<script>
+function basculerMdp(bouton) {
+  const span = bouton.previousElementSibling;
+  const visible = bouton.textContent === "Masquer";
+  span.textContent = visible ? "••••••" : span.dataset.mdp;
+  bouton.textContent = visible ? "Afficher" : "Masquer";
+}
+</script>
 {% endblock %}

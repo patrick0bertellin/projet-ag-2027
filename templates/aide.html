@@ -48,9 +48,17 @@
   <ul>
     <li>Chacun se connecte avec l'identifiant et le mot de passe communiqués par l'administrateur ; le mot de passe se change
       par le lien <em>Mot de passe</em> du bandeau.</li>
+    {% if chef %}
+    <li>Mots de passe (Chef de projet) : ils sont lisibles dans <em>Comptes</em> (bouton <em>Afficher</em>) et dans la colonne
+      « mot_de_passe » de l'onglet Comptes du Google Sheet, où l'on peut aussi en taper un directement. Un ancien mot de
+      passe chiffré reste valable mais s'affiche « non lisible » : en saisir un nouveau pour pouvoir le relire.</li>
+    {% endif %}
     <li>Sans identifiant (bouton <em>Consulter sans identifiant</em>), un visiteur voit seulement le tableau de bord, le
       rétroplanning et les adhérents, sans rien pouvoir modifier.</li>
   </ul>
+  <h2>Navigation</h2>
+  <p>Chaque rubrique du bandeau s'ouvre sur des <strong>sous-onglets</strong> (par exemple Rétroplanning : toutes les tâches,
+     en retard, mes tâches, frise des jalons) ; l'onglet en bleu est celui affiché.</p>
   <h2>Rôles</h2>
   <ul>
     <li><strong>Chef de projet</strong> : tout (tâches, paramètres, comptes, validations, exports, sondage de participation et

@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block titre %}{{ 'Nouvel adhérent' if creation else comite.nom }}{% endblock %}
 {% block contenu %}
+{% include "_onglets_adherents.html" %}
 <div class="entete-page">
-  <h1>{{ 'Nouvel adhérent' if creation else comite.nom }}{% if comite %} <span class="id">{{ comite.id }}</span>{% endif %}</h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.liste') }}">Retour</a></div>
+  <h2>{{ 'Nouvel adhérent' if creation else comite.nom }}{% if comite %} <span class="id">{{ comite.id }}</span>{% endif %}</h2>
+  <div class="actions"><a class="bouton secondaire petit" href="{{ url_for('adherents.liste') }}">Retour</a></div>
 </div>
 {% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
 {% if comite %}

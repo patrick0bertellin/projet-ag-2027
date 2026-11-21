@@ -31,18 +31,10 @@
 {% endmacro %}
 {% block contenu %}
 {% set nb_colonnes = 6 + (0 if visiteur else 2) + (1 if suivi else 0) %}
-<div class="entete-page">
-  <h1>Adhérents</h1>
-  {% if not visiteur %}
-  <div class="actions">
-    <a class="bouton secondaire" href="{{ url_for('adherents.export') }}">Exporter l'Excel</a>
-    {% if peut_gerer %}
-      <a class="bouton secondaire" href="{{ url_for('adherents.importer') }}">Importer un Excel</a>
-      <a class="bouton" href="{{ url_for('adherents.nouveau') }}">Ajouter un adhérent</a>
-    {% endif %}
-  </div>
-  {% endif %}
-</div>
+{% include "_onglets_adherents.html" %}
+{% if not visiteur %}
+<div class="actions barre-actions"><a class="bouton secondaire" href="{{ url_for('adherents.export') }}">Exporter l'Excel des adhérents</a></div>
+{% endif %}
 
 {% if peut_gerer %}{% include "_alerte_synchro.html" %}{% endif %}
 

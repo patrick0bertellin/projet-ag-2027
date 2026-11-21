@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block titre %}Importer les adhérents{% endblock %}
 {% block contenu %}
-<div class="entete-page">
-  <h1>Importer le fichier Excel des adhérents</h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.liste') }}">Retour</a></div>
-</div>
+{% include "_onglets_adherents.html" %}
+<h2>Importer le fichier Excel des adhérents</h2>
 {% with avant_import = true %}{% include "_alerte_synchro.html" %}{% endwith %}
 {% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
 <section class="carte">

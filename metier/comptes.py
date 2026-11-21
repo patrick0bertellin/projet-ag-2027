@@ -1,14 +1,55 @@
-"""Comptes utilisateurs : création, connexion, mot de passe (haché avec werkzeug)."""
+"""Comptes utilisateurs : création, connexion, mot de passe.
+
+Comme dans l'application Éclats 2027, les mots de passe sont enregistrés en clair (colonne « mot_de_passe »
+de l'onglet Comptes) pour que le Chef de projet puisse les relire et les communiquer. Les anciens mots de passe
+chiffrés (colonne « mdp_hash », ou valeur commençant par « scrypt: » / « pbkdf2: ») restent valables ; ils sont
+remplacés par un mot de passe lisible dès qu'on en saisit un nouveau.
+"""
 
 import re
 
-from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
+
+from werkzeug.security import check_password_hash
 
 from metier import booleen
 from metier.dates import horodatage
 from metier.droits import CONTRIBUTION, ROLES
 
 LONGUEUR_MIN_MDP = 8
+PREFIXES_HACHAGE = ("scrypt:", "pbkdf2:")
+
+
+def mot_de_passe_chiffre(valeur):
+    """Mot de passe enregistré sous forme chiffrée (ancien format, non lisible)."""
+    return (valeur or "").startswith(PREFIXES_HACHAGE)
+
+
+def mot_de_passe_enregistre(compte):
+    """Valeur enregistrée : le mot de passe lisible s'il existe, sinon l'ancien mot de passe chiffré."""
+    return (compte or {}).get("mot_de_passe") or (compte or {}).get("mdp_hash") or ""
+
+
+def mot_de_passe_lisible(compte):
+    """Mot de passe affichable par le Chef de projet ("" si aucun ou s'il est chiffré)."""
+    valeur = mot_de_passe_enregistre(compte)
+    return "" if mot_de_passe_chiffre(valeur) else valeur
+
+
+def etat_mot_de_passe(compte):
+    valeur = mot_de_passe_enregistre(compte)
+    if not valeur:
+        return "aucun"
+    return "chiffré" if mot_de_passe_chiffre(valeur) else "lisible"
+
+
+def mot_de_passe_valide(compte, saisi):
+    enregistre = mot_de_passe_enregistre(compte)
+    if not enregistre:
+        return False
+    if mot_de_passe_chiffre(enregistre):
+        return check_password_hash(enregistre, saisi or "")
+    return secrets.compare_digest(enregistre.encode(), (saisi or "").encode())
 
 
 def lire_comptes(stockage):
@@ -42,7 +83,7 @@ def verifier_connexion(stockage, identifiant, mot_de_passe):
     compte = trouver_par_identifiant(stockage, identifiant)
     if not compte or not booleen(compte.get("actif")):
         return None
-    if not compte.get("mdp_hash") or not check_password_hash(compte["mdp_hash"], mot_de_passe or ""):
+    if not mot_de_passe_valide(compte, mot_de_passe):
         return None
     return compte
 
@@ -86,7 +127,7 @@ def nouvel_identifiant(comptes):
     return f"C{(max(numeros) if numeros else 0) + 1:03d}"
 
 
-def creer(stockage, identifiant, nom, roles, mot_de_passe, courriel="", alias="", pole="", doit_changer=True):
+def creer(stockage, identifiant, nom, roles, mot_de_passe, courriel="", alias="", pole="", doit_changer=False):
     compte = {
         "id": nouvel_identifiant(lire_comptes(stockage)),
         "identifiant": " ".join(identifiant.split()),
@@ -95,7 +136,8 @@ def creer(stockage, identifiant, nom, roles, mot_de_passe, courriel="", alias=""
         "courriel": courriel.strip().lower(),
         "roles": ",".join(roles),
         "pole": pole.strip(),
-        "mdp_hash": generate_password_hash(mot_de_passe),
+        "mot_de_passe": mot_de_passe,
+        "mdp_hash": "",
         "actif": "oui",
         "doit_changer_mdp": "oui" if doit_changer else "non",
         "cree_le": horodatage(),
@@ -106,6 +148,7 @@ def creer(stockage, identifiant, nom, roles, mot_de_passe, courriel="", alias=""
 
 def changer_mot_de_passe(stockage, identifiant, mot_de_passe):
     stockage.mettre_a_jour("Comptes", "id", identifiant, {
-        "mdp_hash": generate_password_hash(mot_de_passe),
+        "mot_de_passe": mot_de_passe,
+        "mdp_hash": "",
         "doit_changer_mdp": "non",
     })

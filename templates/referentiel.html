@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block titre %}Référentiel CNOSF{% endblock %}
 {% block contenu %}
-<div class="entete-page">
-  <h1>Référentiel des fédérations du CNOSF</h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ url_for('adherents.liste') }}">Retour aux adhérents</a></div>
-</div>
+{% include "_onglets_adherents.html" %}
+<h2>Référentiel des fédérations du CNOSF</h2>
 {% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
 <p class="discret">La catégorie de chaque comité (et donc le bonus de 5 voix de la catégorie 1) est déduite de sa fédération dans ce référentiel. {{ federations | length }} fédérations.</p>
 {% if peut_gerer %}

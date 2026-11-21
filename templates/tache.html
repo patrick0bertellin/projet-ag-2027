@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block titre %}{{ 'Nouvelle tâche' if creation else 'Tâche ' ~ t.id }}{% endblock %}
 {% block contenu %}
+<h1>Rétroplanning</h1>
+{% include "_onglets_retroplanning.html" %}
 <div class="entete-page">
-  <h1>{{ 'Nouvelle tâche' if creation else 'Tâche ' ~ t.id }}</h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ retour }}">Retour</a></div>
+  <h2>{{ 'Nouvelle tâche' if creation else 'Tâche ' ~ t.id }}</h2>
+  <div class="actions"><a class="bouton secondaire petit" href="{{ retour }}">Retour</a></div>
 </div>
 
 {% if erreurs %}

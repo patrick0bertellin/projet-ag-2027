@@ -24,6 +24,14 @@ MESSAGES = {
 }
 
 
+def _onglets_fiches(st):
+    """Fiches proposées en sous-onglets : toutes, ou seulement celle de son pôle pour un compte Contribution."""
+    fiches = etat_par_pole(st)
+    if _seulement_son_pole(g.compte):
+        fiches = [f for f in fiches if f["pole"] == pole_du_compte(g.compte)]
+    return fiches
+
+
 def _seulement_son_pole(compte):
     """Un compte Contribution sans Chef ni Lecture ne voit que la fiche de son pôle."""
     roles = roles_du_compte(compte)
@@ -33,11 +41,9 @@ def _seulement_son_pole(compte):
 @bp.route("/", strict_slashes=False)
 @onglet_requis("rapport")
 def liste():
-    poles = etat_par_pole(stockage())
-    if _seulement_son_pole(g.compte):
-        poles = [p for p in poles if p["pole"] == pole_du_compte(g.compte)]
+    poles = _onglets_fiches(stockage())
     return render_template(
-        "rapport.html", poles=poles, statuts=STATUTS, peut_exporter=not _seulement_son_pole(g.compte),
+        "rapport.html", poles=poles, onglets_fiches=poles, statuts=STATUTS, peut_exporter=not _seulement_son_pole(g.compte),
         sans_pole=_seulement_son_pole(g.compte) and not pole_du_compte(g.compte),
     )
 
@@ -78,7 +84,7 @@ def fiche(pole):
 def _page(vue, erreurs, modifiable, commentaire_validation=""):
     fiche = vue["fiche"]
     return render_template(
-        "fiche_rapport.html", vue=vue, fiche=fiche, erreurs=erreurs, modifiable=modifiable,
+        "fiche_rapport.html", vue=vue, fiche=fiche, onglets_fiches=_onglets_fiches(stockage()), pole_actif=fiche["pole"], erreurs=erreurs, modifiable=modifiable,
         peut_valider=peut_valider(g.compte), etats=ETATS_ENGAGEMENT, etats_non_prevu=ETATS_NON_PREVU,
         nb_lignes_vides=NB_LIGNES_VIDES, soumise=fiche["statut"] == SOUMISE, validee=fiche["statut"] == VALIDEE,
         commentaire_validation=commentaire_validation,

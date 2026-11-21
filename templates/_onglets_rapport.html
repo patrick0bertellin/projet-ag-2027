@@ -1,0 +1,10 @@
+{# Sous-onglets du Rapport d'activité : l'avancement, puis une fiche par pôle visible #}
+{% set ep = request.endpoint or '' %}
+<h1>Rapport d'activité 2026 – perspectives 2027</h1>
+<p class="sous-titre">Contributions des pôles, à remettre au plus tard le vendredi 8 janvier 2027.</p>
+<nav class="sous-onglets">
+  <a href="{{ url_for('rapport.liste') }}" class="{{ 'actif' if ep == 'rapport.liste' }}">Avancement des fiches</a>
+  {% for f in onglets_fiches %}
+  <a href="{{ url_for('rapport.fiche', pole=f.pole) }}" class="{{ 'actif' if ep == 'rapport.fiche' and pole_actif == f.pole }}">{{ f.pole }}</a>
+  {% endfor %}
+</nav>

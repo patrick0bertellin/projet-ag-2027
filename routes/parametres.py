@@ -15,6 +15,9 @@ from routes import nom_utilisateur, onglet_requis, stockage
 bp = Blueprint("parametres", __name__, url_prefix="/parametres")
 
 
+SECTIONS = {"projet": "Projet", "listes": "Listes", "bareme": "Barème des voix", "import": "Import v05"}
+
+
 def _page(projet=None, listes_texte=None, bareme_texte=None, erreurs=None, section=""):
     st = stockage()
     projet_enregistre = lire_projet(st)
@@ -39,7 +42,8 @@ def _page(projet=None, listes_texte=None, bareme_texte=None, erreurs=None, secti
         libelles_listes=LIBELLES_LISTES,
         bareme=bareme_texte,
         erreurs=erreurs or [],
-        section=section,
+        section=section if section in SECTIONS else "projet",
+        sections=SECTIONS,
         onglets_absents=st.onglets_manquants(),
     )
 
@@ -47,7 +51,7 @@ def _page(projet=None, listes_texte=None, bareme_texte=None, erreurs=None, secti
 @bp.route("/")
 @onglet_requis("parametres")
 def accueil():
-    return _page()
+    return _page(section=request.args.get("section", ""))
 
 
 @bp.route("/projet", methods=["POST"])
@@ -75,7 +79,7 @@ def projet():
     st.remplacer_tout("Projet", lignes_projet(saisie))
     tracer(st, nom_utilisateur(), "Projet", "projet", differences(avant, saisie, CHAMPS_PROJET))
     flash("Paramètres du projet enregistrés ; les butoirs sont recalculés.", "succes")
-    return redirect(url_for("parametres.accueil"))
+    return redirect(url_for("parametres.accueil", section="projet"))
 
 
 def _lignes(texte):
@@ -104,7 +108,7 @@ def listes():
                    for n, v in nouvelles.items() if avant.get(n) != v}
     tracer(st, nom_utilisateur(), "Parametres", "listes", changements)
     flash("Listes enregistrées.", "succes")
-    return redirect(url_for("parametres.accueil"))
+    return redirect(url_for("parametres.accueil", section="listes"))
 
 
 @bp.route("/bareme", methods=["POST"])
@@ -133,7 +137,7 @@ def bareme():
     tracer(st, nom_utilisateur(), "Parametres", "bareme_voix",
            {"barème": (str(avant), str(nouveau))} if avant != nouveau else {})
     flash("Barème des voix enregistré.", "succes")
-    return redirect(url_for("parametres.accueil"))
+    return redirect(url_for("parametres.accueil", section="bareme"))
 
 
 @bp.route("/import", methods=["POST"])
@@ -152,4 +156,4 @@ def import_json():
     tracer(st, nom_utilisateur(), "Import", "projet_ag_2027.json",
            {"import": ("", ", ".join(f"{k} : {v}" for k, v in compte_rendu.items()))})
     flash("Import terminé : " + ", ".join(f"{k} {v} lignes" for k, v in compte_rendu.items()) + ".", "succes")
-    return redirect(url_for("parametres.accueil"))
+    return redirect(url_for("parametres.accueil", section="import"))

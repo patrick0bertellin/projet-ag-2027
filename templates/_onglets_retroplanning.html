@@ -1,0 +1,14 @@
+{# Sous-onglets du Rétroplanning (présentation reprise de l'application Éclats 2027) #}
+{% set ep = request.endpoint or '' %}
+{% set v = vue if vue is defined else '' %}
+<nav class="sous-onglets">
+  <a href="{{ url_for('retroplanning.liste') }}" class="{{ 'actif' if (ep == 'retroplanning.liste' and not v) or ep == 'retroplanning.tache' }}">Toutes les tâches</a>
+  <a href="{{ url_for('retroplanning.liste', vue='retard') }}" class="{{ 'actif' if ep == 'retroplanning.liste' and v == 'retard' }}">En retard</a>
+  {% if compte and compte.id != 'visiteur' %}
+  <a href="{{ url_for('retroplanning.liste', vue='miennes') }}" class="{{ 'actif' if ep == 'retroplanning.liste' and v == 'miennes' }}">Mes tâches</a>
+  {% endif %}
+  <a href="{{ url_for('retroplanning.gantt') }}" class="{{ 'actif' if ep == 'retroplanning.gantt' }}">Frise des jalons</a>
+  {% if 'Chef de projet' in mes_roles %}
+  <a href="{{ url_for('retroplanning.nouvelle') }}" class="{{ 'actif' if ep == 'retroplanning.nouvelle' }}">Nouvelle tâche</a>
+  {% endif %}
+</nav>

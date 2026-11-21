@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block titre %}{{ 'Nouveau compte' if creation else 'Compte' }}{% endblock %}
 {% block contenu %}
+{% include "_onglets_comptes.html" %}
+{% if not creation %}
 <div class="entete-page">
-  <h1>{{ 'Nouveau compte' if creation else 'Compte de ' ~ valeurs.nom }}</h1>
-  <div class="actions"><a class="bouton secondaire" href="{{ url_for('comptes.liste') }}">Retour</a></div>
+  <h2>Compte de {{ valeurs.nom }}</h2>
+  <div class="actions"><a class="bouton secondaire petit" href="{{ url_for('comptes.liste') }}">Retour</a></div>
 </div>
+{% endif %}
 {% if erreurs %}<div class="alerte erreur"><ul>{% for e in erreurs %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
 <form method="post" class="carte formulaire">
   <input type="hidden" name="jeton_csrf" value="{{ jeton_csrf }}">
@@ -25,12 +28,15 @@
       <select name="pole"><option value="">—</option>
         {% for p in poles %}<option {{ 'selected' if valeurs.pole == p }}>{{ p }}</option>{% endfor %}</select>
     </label>
-    <label>{{ 'Mot de passe initial' if creation else 'Nouveau mot de passe (vide = inchangé)' }}
-      <input type="text" name="mot_de_passe" value="" {{ 'required' if creation }} minlength="8" autocomplete="off">
+    <label>Mot de passe{% if chiffre %} (ancien mot de passe chiffré : en saisir un nouveau pour pouvoir l'afficher){% endif %}
+      <input type="text" name="mot_de_passe" value="{{ valeurs.mot_de_passe or '' }}" {{ 'required' if creation }} minlength="8"
+             autocomplete="off" spellcheck="false">
     </label>
     <label class="case"><input type="checkbox" name="actif" value="oui" {{ 'checked' if valeurs.actif | booleen }}> Compte actif</label>
+    <label class="case"><input type="checkbox" name="doit_changer_mdp" value="oui" {{ 'checked' if valeurs.doit_changer_mdp | booleen }}>
+      Demander de changer le mot de passe à la première connexion</label>
   </div>
-  <p class="discret">Le mot de passe initial devra être changé à la première connexion.</p>
+  <p class="discret">Le mot de passe est lisible ici et dans la liste des comptes : communiquez-le à la personne avec son identifiant.</p>
   <button type="submit">{{ 'Créer le compte' if creation else 'Enregistrer' }}</button>
 </form>
 {% endblock %}
