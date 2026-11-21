@@ -1,0 +1,23 @@
+# Déploiement Render (offre gratuite, Frankfurt). Les valeurs secrètes se saisissent dans le tableau de bord Render.
+services:
+  - type: web
+    name: projet-ag-2027
+    env: python
+    region: frankfurt
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn \"app:create_app()\" --workers 1 --threads 4 --timeout 60 --bind 0.0.0.0:$PORT"
+    healthCheckPath: /connexion
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: SHEET_ID
+        sync: false
+      - key: SERVICE_ACCOUNT_JSON
+        sync: false
